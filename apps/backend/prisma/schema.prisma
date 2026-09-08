@@ -8,59 +8,105 @@ datasource db {
 }
 
 enum UserRole {
+  SUPER_ADMIN
+  HOTEL_OWNER
+  RECEPTIONIST
+  HOUSEKEEPER
   GUEST
-  ADMIN
-  STAFF
 }
 
 model Tenant {
-  id        String   @id @default(uuid())
-  name      String
-  subdomain String   @unique
-  locale    String   @default("uz")
-  createdAt DateTime @default(now())
+  id           String   @id @default(uuid())
+  name         String
+  subdomain    String   @unique
+  customDomain String?  @unique
+  locale       String   @default("uz")
+  /// { click: {...}, payme: {...}, stripe: {...} } — provayder kalitlari/credentiallari
+  paymentKeys  Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   users           User[]
+  rooms           Room[]
   serviceRequests ServiceRequest[]
   supportTickets  SupportTicket[]
+  bookings        Booking[]
   payments        Payment[]
 }
 
 model User {
-  id        String   @id @default(uuid())
-  tenantId  String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
-  fullName  String
-  phone     String?
-  role      UserRole
-  createdAt DateTime @default(now())
+  id           String   @id @default(uuid())
+  tenantId     String?
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id])
+  fullName     String
+  phone        String?  @unique
+  email        String?  @unique
+  passwordHash String
+  role         UserRole @default(GUEST)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  assignedRequests ServiceRequest[] @relation("AssignedStaff")
+  serviceRequests ServiceRequest[] @relation("GuestServiceRequests")
+  supportTickets  SupportTicket[]
+  bookings        Booking[]
 
   @@index([tenantId])
 }
 
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  CLEANING
+  MAINTENANCE
+}
+
+model Room {
+  id            String     @id @default(uuid())
+  tenantId      String
+  tenant        Tenant     @relation(fields: [tenantId], references: [id])
+  roomNumber    String
+  floor         Int
+  type          String
+  pricePerNight Decimal    @db.Decimal(10, 2)
+  status        RoomStatus @default(AVAILABLE)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  serviceRequests ServiceRequest[]
+  bookings        Booking[]
+
+  @@unique([tenantId, roomNumber])
+  @@index([tenantId])
+}
+
 enum ServiceRequestStatus {
-  PENDING
-  APPROVED
-  DONE
+  PENDING_ADMIN
+  APPROVED_BY_ADMIN
+  REJECTED_BY_ADMIN
+  COMPLETED
   FAILED
 }
 
 model ServiceRequest {
-  id         String                @id @default(uuid())
+  id         String               @id @default(uuid())
   tenantId   String
-  tenant     Tenant                @relation(fields: [tenantId], references: [id])
-  roomNumber String
+  tenant     Tenant               @relation(fields: [tenantId], references: [id])
+  roomId     String
+  room       Room                 @relation(fields: [roomId], references: [id])
+  guestId    String
+  guest      User                 @relation("GuestServiceRequests", fields: [guestId], references: [id])
   reason     String
-  status     ServiceRequestStatus  @default(PENDING)
-  staffId    String?
-  staff      User?                 @relation("AssignedStaff", fields: [staffId], references: [id])
-  failReason String?
-  createdAt  DateTime              @default(now())
-  updatedAt  DateTime              @updatedAt
+  status     ServiceRequestStatus @default(PENDING_ADMIN)
+  staffNotes String?
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
 
   @@index([tenantId, status])
+}
+
+enum SupportTicketType {
+  COMPLAINT
+  HELP
 }
 
 enum SupportTicketStatus {
@@ -71,14 +117,53 @@ enum SupportTicketStatus {
 }
 
 model SupportTicket {
-  id        String              @id @default(uuid())
+  id        String               @id @default(uuid())
   tenantId  String
-  tenant    Tenant              @relation(fields: [tenantId], references: [id])
-  subject   String
+  tenant    Tenant               @relation(fields: [tenantId], references: [id])
+  guestId   String
+  guest     User                 @relation(fields: [guestId], references: [id])
+  type      SupportTicketType
   message   String
-  status    SupportTicketStatus @default(OPEN)
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
+  status    SupportTicketStatus  @default(OPEN)
+  response  String?
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  @@index([tenantId, status])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  tenantId      String
+  tenant        Tenant        @relation(fields: [tenantId], references: [id])
+  roomId        String
+  room          Room          @relation(fields: [roomId], references: [id])
+  guestId       String
+  guest         User          @relation(fields: [guestId], references: [id])
+  checkIn       DateTime
+  checkOut      DateTime
+  totalPrice    Decimal       @db.Decimal(10, 2)
+  status        BookingStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  payments Payment[]
 
   @@index([tenantId, status])
 }
@@ -89,24 +174,18 @@ enum PaymentProvider {
   STRIPE
 }
 
-enum PaymentStatus {
-  PENDING
-  PAID
-  FAILED
-  REFUNDED
-}
-
 model Payment {
-  id                     String          @id @default(uuid())
-  tenantId               String
-  tenant                 Tenant          @relation(fields: [tenantId], references: [id])
-  provider               PaymentProvider
-  providerTransactionId  String?
-  amount                 Int
-  currency               String          @default("UZS")
-  status                 PaymentStatus   @default(PENDING)
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
+  id            String          @id @default(uuid())
+  tenantId      String
+  tenant        Tenant          @relation(fields: [tenantId], references: [id])
+  bookingId     String
+  booking       Booking         @relation(fields: [bookingId], references: [id])
+  provider      PaymentProvider
+  amount        Decimal         @db.Decimal(10, 2)
+  status        PaymentStatus   @default(PENDING)
+  transactionId String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 
   @@index([tenantId, status])
 }
