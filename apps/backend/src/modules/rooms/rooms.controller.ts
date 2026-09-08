@@ -1,0 +1,73 @@
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserRole } from '@prisma/client';
+import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { TenantGuard } from '../../common/guards/tenant.guard';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { UpdateRoomStatusDto } from './dto/update-room-status.dto';
+import { UpdateRoomDto } from './dto/update-room.dto';
+import { RoomsService } from './rooms.service';
+
+const STAFF_ROLES = [UserRole.SUPER_ADMIN, UserRole.HOTEL_OWNER, UserRole.RECEPTIONIST];
+const STAFF_AND_HOUSEKEEPER_ROLES = [...STAFF_ROLES, UserRole.HOUSEKEEPER];
+
+@ApiTags('rooms')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+@Controller('rooms')
+export class RoomsController {
+  constructor(private readonly roomsService: RoomsService) {}
+
+  @Post()
+  @Roles(...STAFF_ROLES)
+  @ApiOperation({ summary: "Yangi xona yaratish" })
+  create(@CurrentTenant() tenantId: string | null, @Body() dto: CreateRoomDto) {
+    return this.roomsService.create(tenantId, dto);
+  }
+
+  @Get()
+  @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
+  @ApiOperation({ summary: "Mehmonxona xonalari ro'yxati" })
+  findAll(@CurrentTenant() tenantId: string | null) {
+    return this.roomsService.findAll(tenantId);
+  }
+
+  @Get(':id')
+  @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
+  @ApiOperation({ summary: "Bitta xona ma'lumotlari" })
+  findOne(@CurrentTenant() tenantId: string | null, @Param('id', ParseUUIDPipe) id: string) {
+    return this.roomsService.findOne(tenantId, id);
+  }
+
+  @Patch(':id')
+  @Roles(...STAFF_ROLES)
+  @ApiOperation({ summary: "Xona ma'lumotlarini yangilash" })
+  update(
+    @CurrentTenant() tenantId: string | null,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateRoomDto,
+  ) {
+    return this.roomsService.update(tenantId, id, dto);
+  }
+
+  @Delete(':id')
+  @Roles(UserRole.SUPER_ADMIN, UserRole.HOTEL_OWNER)
+  @ApiOperation({ summary: "Xonani o'chirish" })
+  remove(@CurrentTenant() tenantId: string | null, @Param('id', ParseUUIDPipe) id: string) {
+    return this.roomsService.remove(tenantId, id);
+  }
+
+  @Patch(':id/status')
+  @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
+  @ApiOperation({ summary: "Xona statusini o'zgartirish (real-time xabar bilan)" })
+  updateStatus(
+    @CurrentTenant() tenantId: string | null,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateRoomStatusDto,
+  ) {
+    return this.roomsService.updateStatus(tenantId, id, dto.status);
+  }
+}
