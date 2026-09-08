@@ -26,6 +26,7 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
 
   let ownerToken: string;
   let guestToken: string;
+  const suffix = Date.now();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -49,7 +50,6 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
         },
       },
     });
-    const suffix = Date.now();
 
     const ownerRes = await request(app.getHttpServer()).post('/auth/register').send({
       fullName: 'Hotel Owner',
@@ -100,7 +100,7 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
 
     it("noto'g'ri imzo bilan prepare -1 qaytaradi", async () => {
       const res = await request(app.getHttpServer()).post('/payments/click/prepare').send({
-        click_trans_id: 'click-1',
+        click_trans_id: `click-${suffix}`,
         service_id: 'S1',
         merchant_trans_id: bookingId,
         amount: totalPrice,
@@ -113,9 +113,9 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
     });
 
     it("to'g'ri oqim: prepare -> complete -> booking.paymentStatus = PAID", async () => {
-      const prepareParts = ['click-1', 'S1', clickSecret, bookingId, totalPrice, '0', '2027-01-01 09:00:00'];
+      const prepareParts = [`click-${suffix}`, 'S1', clickSecret, bookingId, totalPrice, '0', '2027-01-01 09:00:00'];
       const prepareRes = await request(app.getHttpServer()).post('/payments/click/prepare').send({
-        click_trans_id: 'click-1',
+        click_trans_id: `click-${suffix}`,
         service_id: 'S1',
         merchant_trans_id: bookingId,
         amount: totalPrice,
@@ -124,23 +124,23 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
         sign_string: clickSign(prepareParts),
       });
       expect(prepareRes.body.error).toBe(0);
-      expect(prepareRes.body.merchant_prepare_id).toBe('click-1');
+      expect(prepareRes.body.merchant_prepare_id).toBe(`click-${suffix}`);
 
       const completeParts = [
-        'click-1',
+        `click-${suffix}`,
         'S1',
         clickSecret,
         bookingId,
-        'click-1',
+        `click-${suffix}`,
         totalPrice,
         '1',
         '2027-01-01 09:01:00',
       ];
       const completeRes = await request(app.getHttpServer()).post('/payments/click/complete').send({
-        click_trans_id: 'click-1',
+        click_trans_id: `click-${suffix}`,
         service_id: 'S1',
         merchant_trans_id: bookingId,
-        merchant_prepare_id: 'click-1',
+        merchant_prepare_id: `click-${suffix}`,
         amount: totalPrice,
         action: '1',
         sign_time: '2027-01-01 09:01:00',
@@ -148,7 +148,7 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
         sign_string: clickSign(completeParts),
       });
       expect(completeRes.body.error).toBe(0);
-      expect(completeRes.body.merchant_confirm_id).toBe('click-1');
+      expect(completeRes.body.merchant_confirm_id).toBe(`click-${suffix}`);
 
       const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
       expect(booking?.paymentStatus).toBe('PAID');
@@ -159,7 +159,7 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
   describe('Payme', () => {
     let bookingId: string;
     let amountTiyin: number;
-    const transactionId = 'payme-tx-1';
+    const transactionId = `payme-tx-${suffix}`;
 
     beforeAll(async () => {
       const booking = await createRoomAndBooking('P-101', '2027-02-01', '2027-02-02');
@@ -238,9 +238,9 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
 
     it("noto'g'ri imzo bilan 400 qaytaradi", async () => {
       const event = {
-        id: 'evt_1',
+        id: `evt-${suffix}-1`,
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_1', amount_received: amountCents, metadata: { bookingId } } },
+        data: { object: { id: `pi-${suffix}-1`, amount_received: amountCents, metadata: { bookingId } } },
       };
       const payload = JSON.stringify(event);
       const timestamp = Math.floor(Date.now() / 1000).toString();
@@ -255,9 +255,9 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
 
     it("to'g'ri imzo bilan bookingni PAID qiladi", async () => {
       const event = {
-        id: 'evt_2',
+        id: `evt-${suffix}-2`,
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_2', amount_received: amountCents, metadata: { bookingId } } },
+        data: { object: { id: `pi-${suffix}-2`, amount_received: amountCents, metadata: { bookingId } } },
       };
       const payload = JSON.stringify(event);
       const timestamp = Math.floor(Date.now() / 1000).toString();

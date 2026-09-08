@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "home": "Home",
+    "myBookings": "My Bookings",
+    "login": "Log in",
+    "register": "Sign up",
+    "logout": "Log out",
+    "callService": "Call housekeeping",
+    "support": "Help/Complaint",
+    "admin": "Admin panel"
+  },
+  "home": {
+    "heroTitle": "Find the room that suits you",
+    "heroSubtitle": "Great prices, real-time availability and instant booking",
+    "searchButton": "Search",
+    "noRooms": "No matching rooms found",
+    "contactTitle": "Contact",
+    "callNow": "Call now",
+    "addressLabel": "Address"
+  },
+  "filters": {
+    "title": "Filters",
+    "minPrice": "Min price",
+    "maxPrice": "Max price",
+    "capacity": "Capacity (guests)",
+    "minRating": "Min rating",
+    "amenities": "Amenities",
+    "amenity_pool": "Pool",
+    "amenity_gym": "Gym",
+    "amenity_tennis": "Tennis court",
+    "amenity_wifi": "Wi-Fi",
+    "amenity_breakfast": "Breakfast",
+    "amenity_parking": "Parking",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "room": {
+    "perNight": "per night",
+    "capacity": "guests",
+    "book": "Book now",
+    "status_AVAILABLE": "Available",
+    "status_OCCUPIED": "Occupied",
+    "status_CLEANING": "Cleaning",
+    "status_MAINTENANCE": "Maintenance"
+  },
+  "booking": {
+    "title": "Book a room",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "nights": "nights",
+    "total": "Total",
+    "submit": "Book now",
+    "success": "Booking created successfully",
+    "goToPayment": "Go to payment",
+    "myBookingsTitle": "My bookings",
+    "cancel": "Cancel",
+    "cancelled": "Cancelled",
+    "status_PENDING": "Pending",
+    "status_CONFIRMED": "Confirmed",
+    "status_CHECKED_IN": "Checked in",
+    "status_CHECKED_OUT": "Checked out",
+    "status_CANCELLED": "Cancelled",
+    "payment_PENDING": "Unpaid",
+    "payment_PAID": "Paid",
+    "payment_FAILED": "Failed",
+    "payment_REFUNDED": "Refunded"
+  },
+  "payment": {
+    "title": "Choose a payment method",
+    "click": "Pay with Click",
+    "payme": "Pay with Payme",
+    "stripe": "Pay by card (Stripe)",
+    "redirecting": "Redirecting...",
+    "notConfigured": "This payment method is not configured for this hotel"
+  },
+  "roomService": {
+    "title": "Call housekeeping",
+    "roomLabel": "Room",
+    "reasonLabel": "Reason (required)",
+    "reasonPlaceholder": "E.g. need towels, refill the minibar...",
+    "submit": "Call",
+    "success": "Your request has been sent, you'll get a response soon"
+  },
+  "support": {
+    "title": "Help or complaint",
+    "type": "Type",
+    "type_HELP": "Help",
+    "type_COMPLAINT": "Complaint",
+    "message": "Message",
+    "messagePlaceholder": "Describe your issue in detail...",
+    "submit": "Send",
+    "success": "Your request has been received"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "registerTitle": "Create an account",
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone number",
+    "password": "Password",
+    "submitLogin": "Sign in",
+    "submitRegister": "Sign up",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "loginRequired": "Please sign in to continue"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "close": "Close",
+    "save": "Save",
+    "back": "Back"
+  },
+  "admin": {
+    "loginTitle": "Staff sign in",
+    "dashboard": "Rooms",
+    "serviceRequests": "Requests",
+    "tasks": "My tasks",
+    "supportTickets": "Tickets",
+    "approve": "Approve",
+    "reject": "Reject",
+    "complete": "Done",
+    "fail": "Couldn't complete",
+    "staffNotes": "Notes",
+    "noRequests": "No requests yet",
+    "newRequestToast": "New request received!",
+    "newPaymentToast": "New payment received!"
+  }
+}

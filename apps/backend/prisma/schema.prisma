@@ -21,6 +21,10 @@ model Tenant {
   subdomain    String   @unique
   customDomain String?  @unique
   locale       String   @default("uz")
+  address      String?
+  phone        String?
+  latitude     Float?
+  longitude    Float?
   /// { click: {...}, payme: {...}, stripe: {...} } — provayder kalitlari/credentiallari
   paymentKeys  Json?
   createdAt    DateTime @default(now())
@@ -68,6 +72,9 @@ model Room {
   floor         Int
   type          String
   pricePerNight Decimal    @db.Decimal(10, 2)
+  capacity      Int        @default(2)
+  rating        Decimal?   @db.Decimal(2, 1)
+  amenities     String[]   @default([])
   status        RoomStatus @default(AVAILABLE)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt

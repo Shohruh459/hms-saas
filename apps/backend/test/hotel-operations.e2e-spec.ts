@@ -204,5 +204,21 @@ describe('Rooms & ServiceRequests (e2e)', () => {
       expect(guestPayload.status).toBe('COMPLETED');
       expect(ownerPayload.status).toBe('COMPLETED');
     });
+
+    it("GET /service-requests admin uchun so'rovni ro'yxatda qaytaradi", async () => {
+      const res = await request(app.getHttpServer())
+        .get('/service-requests')
+        .query({ status: 'COMPLETED' })
+        .set('Authorization', `Bearer ${ownerToken}`);
+      expect(res.status).toBe(200);
+      expect(res.body.some((item: any) => item.id === serviceRequestId)).toBe(true);
+    });
+
+    it("GUEST /service-requests ro'yxatini ko'ra olmaydi -> 403", async () => {
+      const res = await request(app.getHttpServer())
+        .get('/service-requests')
+        .set('Authorization', `Bearer ${guestToken}`);
+      expect(res.status).toBe(403);
+    });
   });
 });

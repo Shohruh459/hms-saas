@@ -1,5 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { createHmac, timingSafeEqual } from 'crypto';
+import Stripe from 'stripe';
 import { PaymentProvider, PaymentStatus } from '@prisma/client';
 import { PaymentsService } from './payments.service';
 
@@ -12,6 +13,48 @@ import { PaymentsService } from './payments.service';
 @Injectable()
 export class StripeService {
   constructor(private readonly paymentsService: PaymentsService) {}
+
+  /**
+   * Mehmon frontend'dan bron uchun to'lov boshlaganda chaqiriladi.
+   * Stripe Checkout Session yaratiladi va uning hosted `url`'i qaytariladi
+   * — brauzer to'g'ridan-to'g'ri shu sahifaga yo'naltiriladi (real Stripe
+   * integratsiyasidagi standart oqim, valyuta demo uchun USD).
+   */
+  async createCheckoutSession(bookingId: string, guestId: string, successUrl: string, cancelUrl: string) {
+    const booking = await this.paymentsService.findBookingWithTenant(bookingId);
+    if (!booking) {
+      throw new NotFoundException('Booking topilmadi');
+    }
+    if (booking.guestId !== guestId) {
+      throw new ForbiddenException("Faqat o'zingizning bronlaringiz uchun to'lov qila olasiz");
+    }
+
+    const secretKey = this.paymentsService.getPaymentKeys(booking.tenant).stripe?.secretKey;
+    if (!secretKey) {
+      throw new BadRequestException('Ushbu mehmonxona uchun Stripe sozlanmagan');
+    }
+
+    const stripe = new Stripe(secretKey);
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: { name: `Booking ${booking.id}` },
+            unit_amount: Math.round(Number(booking.totalPrice) * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: { bookingId: booking.id },
+    });
+
+    return { url: session.url };
+  }
 
   async handleWebhook(rawBody: Buffer, signatureHeader: string | undefined, event: any) {
     const bookingId = event?.data?.object?.metadata?.bookingId;

@@ -31,4 +31,12 @@ export class AuthController {
   me(@CurrentUser() user: unknown) {
     return user;
   }
+
+  @Post('refresh')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Hali amal qiladigan token bilan yangi token olish (sliding session)" })
+  refresh(@CurrentUser() user: { id: string }) {
+    return this.authService.refresh(user.id);
+  }
 }

@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "home": "Главная",
+    "myBookings": "Мои бронирования",
+    "login": "Войти",
+    "register": "Регистрация",
+    "logout": "Выйти",
+    "callService": "Вызвать горничную",
+    "support": "Помощь/Жалоба",
+    "admin": "Админ панель"
+  },
+  "home": {
+    "heroTitle": "Найдите подходящий номер",
+    "heroSubtitle": "Удобные цены, доступность в реальном времени и быстрое бронирование",
+    "searchButton": "Поиск",
+    "noRooms": "Подходящих номеров не найдено",
+    "contactTitle": "Контакты",
+    "callNow": "Позвонить сейчас",
+    "addressLabel": "Адрес"
+  },
+  "filters": {
+    "title": "Фильтр",
+    "minPrice": "Мин. цена",
+    "maxPrice": "Макс. цена",
+    "capacity": "Вместимость (чел.)",
+    "minRating": "Мин. рейтинг",
+    "amenities": "Удобства",
+    "amenity_pool": "Бассейн",
+    "amenity_gym": "Тренажёрный зал",
+    "amenity_tennis": "Теннисный корт",
+    "amenity_wifi": "Wi-Fi",
+    "amenity_breakfast": "Завтрак",
+    "amenity_parking": "Парковка",
+    "apply": "Применить",
+    "reset": "Сбросить"
+  },
+  "room": {
+    "perNight": "за ночь",
+    "capacity": "чел.",
+    "book": "Забронировать",
+    "status_AVAILABLE": "Свободен",
+    "status_OCCUPIED": "Занят",
+    "status_CLEANING": "Уборка",
+    "status_MAINTENANCE": "Ремонт"
+  },
+  "booking": {
+    "title": "Бронирование номера",
+    "checkIn": "Дата заезда",
+    "checkOut": "Дата выезда",
+    "nights": "ночей",
+    "total": "Итого",
+    "submit": "Забронировать",
+    "success": "Бронирование успешно создано",
+    "goToPayment": "Перейти к оплате",
+    "myBookingsTitle": "Мои бронирования",
+    "cancel": "Отменить",
+    "cancelled": "Отменено",
+    "status_PENDING": "В ожидании",
+    "status_CONFIRMED": "Подтверждено",
+    "status_CHECKED_IN": "Заселён",
+    "status_CHECKED_OUT": "Выехал",
+    "status_CANCELLED": "Отменено",
+    "payment_PENDING": "Не оплачено",
+    "payment_PAID": "Оплачено",
+    "payment_FAILED": "Ошибка оплаты",
+    "payment_REFUNDED": "Возврат"
+  },
+  "payment": {
+    "title": "Выберите способ оплаты",
+    "click": "Оплатить через Click",
+    "payme": "Оплатить через Payme",
+    "stripe": "Оплата картой (Stripe)",
+    "redirecting": "Перенаправление...",
+    "notConfigured": "Этот способ оплаты не настроен для отеля"
+  },
+  "roomService": {
+    "title": "Вызвать горничную",
+    "roomLabel": "Номер",
+    "reasonLabel": "Причина (обязательно)",
+    "reasonPlaceholder": "Например: нужны полотенца, наполнить минибар...",
+    "submit": "Вызвать",
+    "success": "Ваш запрос отправлен, скоро ответят"
+  },
+  "support": {
+    "title": "Помощь или жалоба",
+    "type": "Тип",
+    "type_HELP": "Помощь",
+    "type_COMPLAINT": "Жалоба",
+    "message": "Сообщение",
+    "messagePlaceholder": "Подробно опишите проблему...",
+    "submit": "Отправить",
+    "success": "Ваше обращение принято"
+  },
+  "auth": {
+    "loginTitle": "Вход в систему",
+    "registerTitle": "Регистрация",
+    "fullName": "Полное имя",
+    "email": "Email",
+    "phone": "Номер телефона",
+    "password": "Пароль",
+    "submitLogin": "Войти",
+    "submitRegister": "Зарегистрироваться",
+    "noAccount": "Нет аккаунта?",
+    "haveAccount": "Уже есть аккаунт?",
+    "loginRequired": "Войдите, чтобы продолжить"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка",
+    "close": "Закрыть",
+    "save": "Сохранить",
+    "back": "Назад"
+  },
+  "admin": {
+    "loginTitle": "Вход для персонала",
+    "dashboard": "Номера",
+    "serviceRequests": "Запросы",
+    "tasks": "Мои задачи",
+    "supportTickets": "Обращения",
+    "approve": "Подтвердить",
+    "reject": "Отклонить",
+    "complete": "Выполнено",
+    "fail": "Не смог выполнить",
+    "staffNotes": "Комментарий",
+    "noRequests": "Пока нет запросов",
+    "newRequestToast": "Новый запрос!",
+    "newPaymentToast": "Получен новый платёж!"
+  }
+}

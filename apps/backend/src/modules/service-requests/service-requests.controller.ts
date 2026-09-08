@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { AuthenticatedUser } from '../../common/types/authenticated-user.interface';
@@ -10,8 +10,16 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminDecisionDto } from './dto/admin-decision.dto';
 import { CreateServiceRequestDto } from './dto/create-service-request.dto';
+import { ListServiceRequestsDto } from './dto/list-service-requests.dto';
 import { StaffFulfillDto } from './dto/staff-fulfill.dto';
 import { ServiceRequestsService } from './service-requests.service';
+
+const STAFF_AND_HOUSEKEEPER_ROLES = [
+  UserRole.SUPER_ADMIN,
+  UserRole.HOTEL_OWNER,
+  UserRole.RECEPTIONIST,
+  UserRole.HOUSEKEEPER,
+];
 
 @ApiTags('service-requests')
 @ApiBearerAuth()
@@ -19,6 +27,13 @@ import { ServiceRequestsService } from './service-requests.service';
 @Controller('service-requests')
 export class ServiceRequestsController {
   constructor(private readonly serviceRequestsService: ServiceRequestsService) {}
+
+  @Get()
+  @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
+  @ApiOperation({ summary: "Tenant'ga tegishli barcha xizmatchi so'rovlari (filtrlash bilan)" })
+  findAll(@CurrentTenant() tenantId: string | null, @Query() filter: ListServiceRequestsDto) {
+    return this.serviceRequestsService.findAll(tenantId, filter.status);
+  }
 
   @Post('guest')
   @Roles(UserRole.GUEST)

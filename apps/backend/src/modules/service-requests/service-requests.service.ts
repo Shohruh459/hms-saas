@@ -19,6 +19,14 @@ export class ServiceRequestsService {
     private readonly notifications: NotificationsService,
   ) {}
 
+  findAll(tenantId: string | null, status?: ServiceRequestStatus) {
+    return this.prisma.serviceRequest.findMany({
+      where: { tenantId: requireTenantId(tenantId), status },
+      include: INCLUDE_RELATIONS,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async createByGuest(tenantId: string | null, guestId: string, dto: CreateServiceRequestDto) {
     const resolvedTenantId = requireTenantId(tenantId);
 

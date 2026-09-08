@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "myBookings": "Bronlarim",
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "logout": "Chiqish",
+    "callService": "Xizmatchi chaqirish",
+    "support": "Yordam/Shikoyat",
+    "admin": "Admin panel"
+  },
+  "home": {
+    "heroTitle": "O'zingizga munosib xonani toping",
+    "heroSubtitle": "Qulay narxlar, real vaqtda mavjudlik va tezkor bron qilish",
+    "searchButton": "Qidirish",
+    "noRooms": "Hozircha mos xona topilmadi",
+    "contactTitle": "Bog'lanish",
+    "callNow": "Hoziroq qo'ng'iroq qilish",
+    "addressLabel": "Manzil"
+  },
+  "filters": {
+    "title": "Filtr",
+    "minPrice": "Minimal narx",
+    "maxPrice": "Maksimal narx",
+    "capacity": "Sig'im (kishi)",
+    "minRating": "Minimal reyting",
+    "amenities": "Qulayliklar",
+    "amenity_pool": "Basseyn",
+    "amenity_gym": "Trenajor zali",
+    "amenity_tennis": "Tennis korti",
+    "amenity_wifi": "Wi-Fi",
+    "amenity_breakfast": "Nonushta",
+    "amenity_parking": "Avtoturargoh",
+    "apply": "Qo'llash",
+    "reset": "Tozalash"
+  },
+  "room": {
+    "perNight": "kecha uchun",
+    "capacity": "kishi",
+    "book": "Band qilish",
+    "status_AVAILABLE": "Bo'sh",
+    "status_OCCUPIED": "Band",
+    "status_CLEANING": "Tozalanmoqda",
+    "status_MAINTENANCE": "Ta'mirlashda"
+  },
+  "booking": {
+    "title": "Xonani bron qilish",
+    "checkIn": "Kelish sanasi",
+    "checkOut": "Ketish sanasi",
+    "nights": "kecha",
+    "total": "Jami narx",
+    "submit": "Bron qilish",
+    "success": "Bron muvaffaqiyatli yaratildi",
+    "goToPayment": "To'lovga o'tish",
+    "myBookingsTitle": "Mening bronlarim",
+    "cancel": "Bekor qilish",
+    "cancelled": "Bekor qilindi",
+    "status_PENDING": "Kutilmoqda",
+    "status_CONFIRMED": "Tasdiqlangan",
+    "status_CHECKED_IN": "Kelib tushdi",
+    "status_CHECKED_OUT": "Chiqib ketdi",
+    "status_CANCELLED": "Bekor qilingan",
+    "payment_PENDING": "To'lanmagan",
+    "payment_PAID": "To'langan",
+    "payment_FAILED": "Muvaffaqiyatsiz",
+    "payment_REFUNDED": "Qaytarilgan"
+  },
+  "payment": {
+    "title": "To'lov usulini tanlang",
+    "click": "Click orqali to'lash",
+    "payme": "Payme orqali to'lash",
+    "stripe": "Karta orqali to'lash (Stripe)",
+    "redirecting": "Yo'naltirilmoqda...",
+    "notConfigured": "Bu mehmonxona uchun ushbu to'lov usuli sozlanmagan"
+  },
+  "roomService": {
+    "title": "Xona xizmatchisini chaqirish",
+    "roomLabel": "Xona",
+    "reasonLabel": "Sababi (majburiy)",
+    "reasonPlaceholder": "Masalan: sochiq kerak, minibarni to'ldirish kerak...",
+    "submit": "Chaqirish",
+    "success": "So'rovingiz yuborildi, tez orada javob beriladi"
+  },
+  "support": {
+    "title": "Yordam yoki shikoyat",
+    "type": "Turi",
+    "type_HELP": "Yordam",
+    "type_COMPLAINT": "Shikoyat",
+    "message": "Xabar",
+    "messagePlaceholder": "Muammoingizni batafsil yozing...",
+    "submit": "Yuborish",
+    "success": "Murojaatingiz qabul qilindi"
+  },
+  "auth": {
+    "loginTitle": "Tizimga kirish",
+    "registerTitle": "Ro'yxatdan o'tish",
+    "fullName": "To'liq ism",
+    "email": "Email",
+    "phone": "Telefon raqami",
+    "password": "Parol",
+    "submitLogin": "Kirish",
+    "submitRegister": "Ro'yxatdan o'tish",
+    "noAccount": "Hisobingiz yo'qmi?",
+    "haveAccount": "Hisobingiz bormi?",
+    "loginRequired": "Davom etish uchun tizimga kiring"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik yuz berdi",
+    "close": "Yopish",
+    "save": "Saqlash",
+    "back": "Orqaga"
+  },
+  "admin": {
+    "loginTitle": "Xodimlar uchun kirish",
+    "dashboard": "Xonalar",
+    "serviceRequests": "So'rovlar",
+    "tasks": "Vazifalarim",
+    "supportTickets": "Murojaatlar",
+    "approve": "Tasdiqlash",
+    "reject": "Rad etish",
+    "complete": "Bajarildi",
+    "fail": "Bajara olmadim",
+    "staffNotes": "Izoh",
+    "noRequests": "Hozircha so'rovlar yo'q",
+    "newRequestToast": "Yangi so'rov keldi!",
+    "newPaymentToast": "Yangi to'lov qabul qilindi!"
+  }
+}

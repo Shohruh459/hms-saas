@@ -10,6 +10,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { ServiceRequestsModule } from './modules/service-requests/service-requests.module';
 import { SupportTicketsModule } from './modules/support-tickets/support-tickets.module';
+import { TenantsModule } from './modules/tenants/tenants.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -23,6 +24,7 @@ import { PrismaModule } from './prisma/prisma.module';
     SupportTicketsModule,
     BookingsModule,
     PaymentsModule,
+    TenantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

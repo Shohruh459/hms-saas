@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -64,6 +64,19 @@ export class AuthService {
       throw new UnauthorizedException("Email/telefon yoki parol noto'g'ri");
     }
 
+    return this.buildAuthResponse(user);
+  }
+
+  /**
+   * Sliding-session token yangilash: joriy (hali amal qiladigan) token
+   * bilan kelgan foydalanuvchi uchun yangi muddatli token qaytaradi.
+   * JwtAuthGuard tokenni allaqachon tasdiqlagan bo'lishi shart.
+   */
+  async refresh(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('Foydalanuvchi topilmadi');
+    }
     return this.buildAuthResponse(user);
   }
 

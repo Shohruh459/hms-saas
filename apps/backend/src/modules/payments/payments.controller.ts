@@ -1,7 +1,13 @@
-import { Body, Controller, Headers, HttpCode, Post, Req } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Headers, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserRole } from '@prisma/client';
 import type { Request } from 'express';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ClickService } from './click.service';
+import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto';
 import { PaymeService } from './payme.service';
 import { StripeService } from './stripe.service';
 
@@ -47,6 +53,15 @@ export class PaymentsController {
     @Headers('authorization') authorization?: string,
   ) {
     return this.paymeService.handle(body, authorization);
+  }
+
+  @Post('stripe/checkout-session')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.GUEST)
+  @ApiOperation({ summary: "Mehmon uchun Stripe Checkout Session yaratish" })
+  createStripeCheckoutSession(@CurrentUser() user: { id: string }, @Body() dto: CreateCheckoutSessionDto) {
+    return this.stripeService.createCheckoutSession(dto.bookingId, user.id, dto.successUrl, dto.cancelUrl);
   }
 
   @Post('stripe/webhook')

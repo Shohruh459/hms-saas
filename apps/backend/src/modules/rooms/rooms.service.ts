@@ -4,6 +4,7 @@ import { requireTenantId } from '../../common/utils/require-tenant-id';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
+import { FindPublicRoomsDto } from './dto/find-public-rooms.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 
 @Injectable()
@@ -65,6 +66,32 @@ export class RoomsService {
     this.notifications.notifyHousekeepers(resolvedTenantId, 'room.status_changed', updated);
 
     return updated;
+  }
+
+  /**
+   * Mehmonlar uchun ochiq (autentifikatsiyasiz) qidiruv — faqat bo'sh
+   * (AVAILABLE) xonalar, narx/sig'im/reyting/qulayliklar bo'yicha filtr.
+   */
+  findPublic(tenantId: string | null, filter: FindPublicRoomsDto) {
+    const amenityList = filter.amenities
+      ?.split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    return this.prisma.room.findMany({
+      where: {
+        tenantId: requireTenantId(tenantId),
+        status: RoomStatus.AVAILABLE,
+        pricePerNight: {
+          gte: filter.minPrice,
+          lte: filter.maxPrice,
+        },
+        capacity: filter.capacity ? { gte: filter.capacity } : undefined,
+        rating: filter.minRating ? { gte: filter.minRating } : undefined,
+        amenities: amenityList?.length ? { hasEvery: amenityList } : undefined,
+      },
+      orderBy: { pricePerNight: 'asc' },
+    });
   }
 
   private mapPrismaError(error: unknown) {

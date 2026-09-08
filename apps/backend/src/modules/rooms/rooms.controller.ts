@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
@@ -7,6 +7,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
 import { CreateRoomDto } from './dto/create-room.dto';
+import { FindPublicRoomsDto } from './dto/find-public-rooms.dto';
 import { UpdateRoomStatusDto } from './dto/update-room-status.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomsService } from './rooms.service';
@@ -15,13 +16,19 @@ const STAFF_ROLES = [UserRole.SUPER_ADMIN, UserRole.HOTEL_OWNER, UserRole.RECEPT
 const STAFF_AND_HOUSEKEEPER_ROLES = [...STAFF_ROLES, UserRole.HOUSEKEEPER];
 
 @ApiTags('rooms')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
 @Controller('rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
+  @Get('public')
+  @ApiOperation({ summary: "Mehmonlar uchun ochiq xona qidiruvi (autentifikatsiyasiz, x-tenant-id header orqali)" })
+  findPublicRooms(@CurrentTenant() tenantId: string | null, @Query() filter: FindPublicRoomsDto) {
+    return this.roomsService.findPublic(tenantId, filter);
+  }
+
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+  @ApiBearerAuth()
   @Roles(...STAFF_ROLES)
   @ApiOperation({ summary: "Yangi xona yaratish" })
   create(@CurrentTenant() tenantId: string | null, @Body() dto: CreateRoomDto) {
@@ -29,6 +36,8 @@ export class RoomsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+  @ApiBearerAuth()
   @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
   @ApiOperation({ summary: "Mehmonxona xonalari ro'yxati" })
   findAll(@CurrentTenant() tenantId: string | null) {
@@ -36,6 +45,8 @@ export class RoomsController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+  @ApiBearerAuth()
   @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
   @ApiOperation({ summary: "Bitta xona ma'lumotlari" })
   findOne(@CurrentTenant() tenantId: string | null, @Param('id', ParseUUIDPipe) id: string) {
@@ -43,6 +54,8 @@ export class RoomsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+  @ApiBearerAuth()
   @Roles(...STAFF_ROLES)
   @ApiOperation({ summary: "Xona ma'lumotlarini yangilash" })
   update(
@@ -54,6 +67,8 @@ export class RoomsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+  @ApiBearerAuth()
   @Roles(UserRole.SUPER_ADMIN, UserRole.HOTEL_OWNER)
   @ApiOperation({ summary: "Xonani o'chirish" })
   remove(@CurrentTenant() tenantId: string | null, @Param('id', ParseUUIDPipe) id: string) {
@@ -61,6 +76,8 @@ export class RoomsController {
   }
 
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard, TenantGuard)
+  @ApiBearerAuth()
   @Roles(...STAFF_AND_HOUSEKEEPER_ROLES)
   @ApiOperation({ summary: "Xona statusini o'zgartirish (real-time xabar bilan)" })
   updateStatus(
