@@ -1,6 +1,7 @@
 import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
+import { AuthenticatedUser } from '../../common/types/authenticated-user.interface';
 import { CurrentTenant } from '../../common/decorators/current-tenant.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -11,12 +12,6 @@ import { AdminDecisionDto } from './dto/admin-decision.dto';
 import { CreateServiceRequestDto } from './dto/create-service-request.dto';
 import { StaffFulfillDto } from './dto/staff-fulfill.dto';
 import { ServiceRequestsService } from './service-requests.service';
-
-interface AuthenticatedUser {
-  id: string;
-  tenantId: string | null;
-  role: UserRole;
-}
 
 @ApiTags('service-requests')
 @ApiBearerAuth()

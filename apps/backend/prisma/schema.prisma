@@ -187,5 +187,7 @@ model Payment {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 
+  @@unique([provider, transactionId])
   @@index([tenantId, status])
+  @@index([bookingId])
 }
