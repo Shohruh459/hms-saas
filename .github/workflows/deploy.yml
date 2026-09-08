@@ -1,0 +1,112 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test & build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: hms
+          POSTGRES_PASSWORD: hms
+          POSTGRES_DB: hms_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U hms"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://hms:hms@localhost:5432/hms_test
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: ci-test-secret
+      JWT_EXPIRES_IN: 1h
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma generate & migrate
+        working-directory: apps/backend
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
+
+      - name: Backend unit tests
+        working-directory: apps/backend
+        run: npm test
+
+      - name: Backend e2e tests
+        working-directory: apps/backend
+        run: npm run test:e2e
+
+      - name: Backend build
+        working-directory: apps/backend
+        run: npm run build
+
+      - name: Frontend build
+        working-directory: apps/frontend
+        env:
+          NEXT_PUBLIC_API_URL: /api
+        run: npm run build
+
+  deploy:
+    name: Deploy to server
+    needs: test
+    runs-on: ubuntu-latest
+    # Serverga ega bo'lmagunча (SSH_HOST/SSH_USER/SSH_KEY Secrets
+    # qo'shilmaguncha) bu job avtomatik o'tkazib yuboriladi — testlar
+    # baribir har bir push'da ishlaydi. Secrets Settings > Secrets and
+    # variables > Actions bo'limida qo'shiladi (DEPLOYMENT.md'ga qarang).
+    if: >
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      secrets.SSH_HOST != '' &&
+      secrets.SSH_USER != '' &&
+      secrets.SSH_KEY != ''
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd "${DEPLOY_PATH:-/opt/hms-saas}"
+            git pull origin main
+            docker compose --env-file .env.production -f docker-compose.prod.yml build
+            docker compose --env-file .env.production -f docker-compose.prod.yml up -d
+            docker image prune -f
+          envs: DEPLOY_PATH
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}

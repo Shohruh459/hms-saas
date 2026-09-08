@@ -1,0 +1,97 @@
+# Production compose fayli. Ishga tushirish:
+#   docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
+#
+# Barcha qiymatlar .env.production'dan (yoki uni tanlagan boshqa
+# --env-file'dan) o'qiladi — server/domen hali aniq bo'lmasa ham,
+# standart qiymatlar bilan lokal Docker muhitida ishlayveradi.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hms}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hms}
+      POSTGRES_DB: ${POSTGRES_DB:-hms}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hms}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-hms}:${POSTGRES_PASSWORD:-hms}@postgres:5432/${POSTGRES_DB:-hms}
+      REDIS_URL: redis://redis:6379
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+        NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL:-}
+        NEXT_PUBLIC_TENANT_ID: ${NEXT_PUBLIC_TENANT_ID:-}
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME:-localhost}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/templates:ro
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+    depends_on:
+      - backend
+      - frontend
+
+  # SSL sertifikati kerak bo'lganda (domen aniqlangach) ishga tushiriladi:
+  #   docker compose --env-file .env.production -f docker-compose.prod.yml \
+  #     run --rm certbot certonly --webroot -w /var/www/certbot \
+  #     -d ${DOMAIN_NAME} --email you@example.com --agree-tos --no-eff-email
+  # Batafsil: DEPLOYMENT.md
+  certbot:
+    image: certbot/certbot
+    profiles: ["certbot"]
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+
+volumes:
+  postgres_data:
+  redis_data:
+  certbot_www:
+  certbot_conf:

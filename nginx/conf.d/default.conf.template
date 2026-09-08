@@ -1,0 +1,61 @@
+# Faol shablon (HTTP, port 80). Domen hali aniq bo'lmasa ham (DOMAIN_NAME
+# standart bo'yicha "localhost") va SSL sertifikati hali olinmagan bo'lsa
+# ham ishlaydi — lokal Docker muhitida va production'da certbot orqali
+# sertifikat olinguncha ishlatiladigan bazaviy konfiguratsiya.
+#
+# ${DOMAIN_NAME} — .env.production'dagi qiymatdan nginx konteyneri
+# ishga tushganda avtomatik almashtiriladi (envsubst, nginx image'ining
+# o'zi tomonidan /etc/nginx/templates/*.template fayllar uchun).
+#
+# Domen va SSL sertifikati tayyor bo'lgach, ushbu faylni
+# ssl.conf.template.example asosida yangilang (DEPLOYMENT.md'ga qarang).
+
+server {
+    listen 80;
+    server_name ${DOMAIN_NAME};
+
+    # Certbot HTTP-01 tekshiruvi uchun.
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    # Backend API — NestJS (3001-port). "/api" prefiksi olib tashlanadi.
+    location /api/ {
+        proxy_pass http://backend:3001/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Swagger hujjatlari ham backend orqali (/api ostida emas, to'g'ridan-to'g'ri).
+    location /docs {
+        proxy_pass http://backend:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+    }
+
+    # Socket.IO (real-time bildirishnomalar) — WebSocket upgrade bilan.
+    location /socket.io/ {
+        proxy_pass http://backend:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 86400;
+    }
+
+    # Frontend — Next.js (3000-port).
+    location / {
+        proxy_pass http://frontend:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
