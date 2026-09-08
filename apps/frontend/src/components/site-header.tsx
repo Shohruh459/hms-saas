@@ -14,7 +14,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
-      <div className="container flex h-16 items-center justify-between gap-4">
+      <div className="container flex min-h-16 flex-wrap items-center justify-between gap-3 py-3">
         <Link href={`/${locale}`} className="text-lg font-bold text-primary">
           HMS
         </Link>

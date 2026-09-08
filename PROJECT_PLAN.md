@@ -157,9 +157,42 @@ hms-saas/
 
 ## 4. Keyingi bosqichlar (roadmap)
 
-1. Auth va rol tizimi (Guest/Admin/Staff, JWT + tenant context).
-2. Xona xizmatchisini chaqirish moduli (to'liq CRUD + holat mashinasi + real-vaqt bildirishnomalar).
-3. Onlayn yordam/shikoyat moduli.
-4. To'lov adapterlari (Click → Payme → Stripe navbat bilan).
-5. Admin panel dashboard va hisobotlar.
-6. Production deploy: Hetzner + Nginx + SSL (Let's Encrypt) + CI/CD.
+1. ✅ Auth va rol tizimi (Guest/Admin/Staff, JWT + tenant context).
+2. ✅ Xona xizmatchisini chaqirish moduli (to'liq CRUD + holat mashinasi + real-vaqt bildirishnomalar).
+3. ✅ Onlayn yordam/shikoyat moduli.
+4. ✅ To'lov adapterlari (Click, Payme, Stripe).
+5. ✅ Admin panel dashboard (xonalar matritsasi, so'rovlar manageri, housekeeper vazifalari).
+6. ✅ Production deploy infratuzilmasi: Docker, Nginx (dinamik + SSL shabloni), CI/CD (DEPLOYMENT.md).
+7. ⏭ Mobil ilovalar (Capacitor/PWA) — 7-bo'limga qarang.
+8. ⏭ Quyidagi 5-bo'limdagi g'oyalardan tanlab, keyingi bosqichlarda amalga oshirish.
+
+## 5. Dunyo tajribasi asosida takomillashtirish g'oyalari
+
+Quyidagi g'oyalar **Cloudbeds**, **Mews** va **Flexkeeping** kabi yetakchi HMS/SaaS platformalaridan ilhomlanib tuzilgan — hozirgi arxitekturaga mos, bosqichma-bosqich qo'shilishi mumkin bo'lgan qisqa takliflar ro'yxati (hali amalga oshirilmagan, kelajak uchun backlog).
+
+### 5.1 Mehmon tajribasi (Guest Experience)
+
+- **QR-kod orqali xizmat chaqirish** (Mews'ning contactless yondashuvi) — har bir xonaga o'ziga xos QR-kod osiladi; mehmon skanerlab, to'g'ridan-to'g'ri shu xona uchun Room Service formasi ochiladi (hozirgi qo'lda xona tanlash o'rniga). Amalga oshirish: `Room.qrToken` ustuni + `GET /rooms/scan/:qrToken` ochiq endpoint.
+- **Kontaktsiz check-in/check-out** — bron sanasi kelganda mehmon ilovada ID/pasport rasmini yuklab "Check-in" qiladi; check-out'da avtomatik hisob-kitob va PDF-kvitansiya.
+- **Ko'p kanalli eslatmalar** — bron tasdig'i/eslatmalari SMS, Telegram bot yoki WhatsApp orqali (BullMQ navbati orqali, hozirgi WebSocket'dan tashqari qo'shimcha kanal).
+- **Checkout'dan keyin fikr-mulohaza** — avtomatik so'rovnoma yuborish, natijalar `Room.rating`ni yangilashda ishlatiladi.
+
+### 5.2 Operatsion samaradorlik (Flexkeeping ilhomida)
+
+- **Xona holatiga foto biriktirish** — Housekeeper xonani `MAINTENANCE`ga o'tkazganda muammo fotosini yuklaydi (`ServiceRequest`/`Room`ga `attachments: string[]`, S3/R2'da saqlanadi).
+- **Tozalash checklist'i** — har bir xona turi uchun standart bosqichlar ro'yxati, xizmatchi checkbox orqali belgilaydi — sifat nazorati uchun.
+- **Avtomatik navbat shakllantirish** — checkout vaqti yaqinlashayotgan xonalar tozalash navbatiga avtomatik qo'shiladi (BullMQ rejalashtirilgan job).
+- **Alohida texnik xizmat (`MaintenanceRequest`)** — santexnik/elektrik so'rovlari mehmon `ServiceRequest`laridan ajratilgan ichki oqim sifatida.
+
+### 5.3 Boshqaruv va moliya (Cloudbeds/Mews ilhomida)
+
+- **Night Audit** — har kecha avtomatik ishga tushadigan BullMQ cron job: kunlik daromadni yopish, "no-show" bronlarni belgilash, ertangi kelishlar ro'yxati, kunlik hisobot (PDF/email).
+- **Dinamik narxlash** — bandlik darajasiga qarab `Room.pricePerNight`ni avtomatik moslashtirish qoidalari.
+- **Analitika dashboard** — RevPAR, ADR (o'rtacha kunlik narx), bandlik foizi kabi mehmonxona sanoati metrikalari uchun `/admin/analytics`.
+- **Channel Manager integratsiyasi** — Booking.com/Airbnb/Ostrovok bilan ikki tomonlama bron sinxronizatsiyasi.
+
+### 5.4 Texnik va integratsiya g'oyalari
+
+- **Smart-lock/IoT** — raqamli eshik qulflari (TTLock, Salto) — bron tasdiqlangach avtomatik PIN-kod yuborish.
+- **Multi-property (zanjir) rejimi** — bitta egaga bir nechta mehmonxona (Tenant)ni bitta hisobdan boshqarish imkoniyati.
+- **Audit log** — narx o'zgartirish, bekor qilish kabi admin harakatlari uchun alohida `AuditLog` jadvali — moliyaviy shaffoflik uchun.

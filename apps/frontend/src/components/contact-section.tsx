@@ -27,7 +27,7 @@ export function ContactSection() {
     : null;
 
   return (
-    <section className="grid gap-6 rounded-lg border bg-card p-6 md:grid-cols-2">
+    <section className="grid grid-cols-1 gap-6 rounded-lg border bg-card p-6 md:grid-cols-2">
       <div className="space-y-3">
         <h2 className="text-xl font-semibold">{t('home.contactTitle')}</h2>
         {tenant.address && (
@@ -36,9 +36,9 @@ export function ContactSection() {
           </p>
         )}
         {tenant.phone && (
-          <a href={`tel:${tenant.phone}`}>
-            <Button className="gap-2">
-              <Phone className="h-4 w-4" /> {t('home.callNow')} ({tenant.phone})
+          <a href={`tel:${tenant.phone}`} className="block">
+            <Button className="w-full max-w-full gap-2 whitespace-normal text-center">
+              <Phone className="h-4 w-4 shrink-0" /> {t('home.callNow')} ({tenant.phone})
             </Button>
           </a>
         )}

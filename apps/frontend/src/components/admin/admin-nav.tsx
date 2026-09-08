@@ -23,7 +23,7 @@ export function AdminNav() {
 
   return (
     <header className="border-b bg-background">
-      <div className="container flex h-16 flex-wrap items-center justify-between gap-4">
+      <div className="container flex min-h-16 flex-wrap items-center justify-between gap-3 py-3">
         <span className="text-lg font-bold text-primary">HMS Admin</span>
         <nav className="flex flex-wrap items-center gap-1">
           {links.map((link) => (

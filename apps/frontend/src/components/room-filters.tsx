@@ -43,7 +43,7 @@ export function RoomFilters({ onSearch }: { onSearch: (filters: PublicRoomFilter
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border bg-card p-4">
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-5">
         <div className="space-y-1">
           <Label>{t('filters.minPrice')}</Label>
           <Input type="number" min={0} value={minPrice} onChange={(event) => setMinPrice(event.target.value)} />

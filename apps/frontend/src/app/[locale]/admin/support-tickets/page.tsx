@@ -44,7 +44,7 @@ export default function SupportTicketsPage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">{t('admin.supportTickets')}</h1>
       {tickets.length === 0 && <p className="text-muted-foreground">{t('admin.noRequests')}</p>}
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {tickets.map((ticket) => (
           <Card key={ticket.id}>
             <CardHeader>

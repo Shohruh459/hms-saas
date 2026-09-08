@@ -42,7 +42,7 @@ export default function MyBookingsPage() {
       <SiteHeader />
       <main className="container space-y-4 py-8">
         <h1 className="text-2xl font-bold">{t('booking.myBookingsTitle')}</h1>
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {bookings.map((booking) => (
             <Card key={booking.id}>
               <CardHeader>

@@ -58,7 +58,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">{t('admin.dashboard')}</h1>
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {rooms.map((room) => (
           <Card key={room.id} className={cn('border-2', STATUS_STYLES[room.status])}>
             <CardHeader>

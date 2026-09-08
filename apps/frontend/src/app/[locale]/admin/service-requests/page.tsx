@@ -50,7 +50,7 @@ export default function ServiceRequestsPage() {
 
       {requests.length === 0 && <p className="text-muted-foreground">{t('admin.noRequests')}</p>}
 
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {[...pending, ...others].map((request) => (
           <Card key={request.id}>
             <CardHeader>
