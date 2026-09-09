@@ -88,6 +88,13 @@ export interface AdminTenant {
   createdAt: string;
 }
 
+export interface SuperadminAccessEntry {
+  email: string;
+  grantedBy: string | null;
+  createdAt: string | null;
+  isRoot: boolean;
+}
+
 export interface DiscoveryHotel {
   id: string;
   name: string;

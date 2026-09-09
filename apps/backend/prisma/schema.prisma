@@ -15,6 +15,16 @@ enum UserRole {
   GUEST
 }
 
+/// Superadmin panelidan foydalanishga ruxsat berilgan elektron pochtalar.
+/// ROOT_SUPER_ADMIN_EMAIL (kodda qattiq belgilangan) doim ruxsatga ega —
+/// bu jadval faqat u tomonidan QO'SHIMCHA qo'shilgan pochtalarni saqlaydi.
+model AllowedSuperadminEmail {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  grantedBy String
+  createdAt DateTime @default(now())
+}
+
 enum TenantStatus {
   PENDING
   ACTIVE

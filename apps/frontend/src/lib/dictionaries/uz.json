@@ -102,7 +102,9 @@
     "submitRegister": "Ro'yxatdan o'tish",
     "noAccount": "Hisobingiz yo'qmi?",
     "haveAccount": "Hisobingiz bormi?",
-    "loginRequired": "Davom etish uchun tizimga kiring"
+    "loginRequired": "Davom etish uchun tizimga kiring",
+    "or": "Yoki",
+    "continueWithGoogle": "Google orqali kirish"
   },
   "common": {
     "loading": "Yuklanmoqda...",
@@ -117,6 +119,7 @@
     "serviceRequests": "So'rovlar",
     "tasks": "Vazifalarim",
     "supportTickets": "Murojaatlar",
+    "settings": "Sozlamalar",
     "approve": "Tasdiqlash",
     "reject": "Rad etish",
     "complete": "Bajarildi",
@@ -149,7 +152,16 @@
     "approveVideo": "Tasdiqlash",
     "rejectVideo": "Rad etish",
     "noHotels": "Hozircha mehmonxonalar yo'q",
-    "updated": "Yangilandi"
+    "updated": "Yangilandi",
+    "accessDenied": "Sizning pochtangizga superadmin panelidan foydalanish huquqi berilmagan. Root pochta orqali ruxsat so'rang.",
+    "accessTitle": "Superadmin ruxsatlari",
+    "accessDescription": "Faqat root pochta va u ruxsat bergan pochtalar superadmin panelidan foydalana oladi.",
+    "accessEmailPlaceholder": "yangi-hamkasb@example.com",
+    "accessGrant": "Ruxsat berish",
+    "accessEmail": "Pochta",
+    "accessGrantedBy": "Kim ruxsat berdi",
+    "accessRoot": "Root",
+    "accessRevoke": "Bekor qilish"
   },
   "discovery": {
     "modeRating": "Reyting bo'yicha",
@@ -161,5 +173,12 @@
     "noHotels": "Hozircha mos mehmonxona topilmadi",
     "noRating": "Reyting yo'q",
     "externalNotice": "Demo rejimida: production'da mehmonxonaning o'z sahifasiga o'tkazadi"
+  },
+  "qrCard": {
+    "title": "QR Vizitka Yaratish",
+    "logoLabel": "Mehmonxona logotipini yuklash (ixtiyoriy)",
+    "scanCaption": "Xizmatlarni chaqirish uchun skanerlang",
+    "downloadPng": "PNG yuklab olish",
+    "downloadPdf": "PDF yuklab olish"
   }
 }

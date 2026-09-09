@@ -2,6 +2,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { SuperadminAccessService } from '../src/modules/admin/superadmin-access.service';
 import { R2Service } from '../src/modules/uploads/r2.service';
 
 describe('Tenant lifecycle: registration, status enforcement, R2 video, superadmin, discovery (e2e)', () => {
@@ -25,13 +26,19 @@ describe('Tenant lifecycle: registration, status enforcement, R2 video, superadm
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     await app.init();
 
+    const superAdminEmail = `superadmin-${suffix}@test.uz`;
     const superAdminRes = await request(app.getHttpServer()).post('/auth/register').send({
       fullName: 'Super Admin',
-      email: `superadmin-${suffix}@test.uz`,
+      email: superAdminEmail,
       password: 'SuperPass123',
       role: 'SUPER_ADMIN',
     });
     superAdminToken = superAdminRes.body.accessToken;
+
+    // Superadmin panel/endpoint'lariga kirish endi faqat ruxsat ro'yxatidagi
+    // pochtalarga berilgani uchun, testda ham shu email avval ro'yxatga
+    // qo'shiladi (real hayotda buni root pochta bajaradi).
+    await app.get(SuperadminAccessService).grant(superAdminEmail, 'test-setup');
   });
 
   afterAll(async () => {

@@ -102,7 +102,9 @@
     "submitRegister": "Sign up",
     "noAccount": "Don't have an account?",
     "haveAccount": "Already have an account?",
-    "loginRequired": "Please sign in to continue"
+    "loginRequired": "Please sign in to continue",
+    "or": "Or",
+    "continueWithGoogle": "Continue with Google"
   },
   "common": {
     "loading": "Loading...",
@@ -117,6 +119,7 @@
     "serviceRequests": "Requests",
     "tasks": "My tasks",
     "supportTickets": "Tickets",
+    "settings": "Settings",
     "approve": "Approve",
     "reject": "Reject",
     "complete": "Done",
@@ -149,7 +152,16 @@
     "approveVideo": "Approve",
     "rejectVideo": "Reject",
     "noHotels": "No hotels yet",
-    "updated": "Updated"
+    "updated": "Updated",
+    "accessDenied": "Your email has not been granted access to the superadmin panel. Ask the root email to grant access.",
+    "accessTitle": "Superadmin access",
+    "accessDescription": "Only the root email and emails it has granted access to can use the superadmin panel.",
+    "accessEmailPlaceholder": "new-colleague@example.com",
+    "accessGrant": "Grant access",
+    "accessEmail": "Email",
+    "accessGrantedBy": "Granted by",
+    "accessRoot": "Root",
+    "accessRevoke": "Revoke"
   },
   "discovery": {
     "modeRating": "By rating",
@@ -161,5 +173,12 @@
     "noHotels": "No matching hotels yet",
     "noRating": "No rating",
     "externalNotice": "Demo mode: in production this opens the hotel's own site"
+  },
+  "qrCard": {
+    "title": "Generate QR Business Card",
+    "logoLabel": "Upload hotel logo (optional)",
+    "scanCaption": "Scan to call services",
+    "downloadPng": "Download PNG",
+    "downloadPdf": "Download PDF"
   }
 }

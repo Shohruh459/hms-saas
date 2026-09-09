@@ -102,7 +102,9 @@
     "submitRegister": "Зарегистрироваться",
     "noAccount": "Нет аккаунта?",
     "haveAccount": "Уже есть аккаунт?",
-    "loginRequired": "Войдите, чтобы продолжить"
+    "loginRequired": "Войдите, чтобы продолжить",
+    "or": "Или",
+    "continueWithGoogle": "Войти через Google"
   },
   "common": {
     "loading": "Загрузка...",
@@ -117,6 +119,7 @@
     "serviceRequests": "Запросы",
     "tasks": "Мои задачи",
     "supportTickets": "Обращения",
+    "settings": "Настройки",
     "approve": "Подтвердить",
     "reject": "Отклонить",
     "complete": "Выполнено",
@@ -149,7 +152,16 @@
     "approveVideo": "Подтвердить",
     "rejectVideo": "Отклонить",
     "noHotels": "Пока нет отелей",
-    "updated": "Обновлено"
+    "updated": "Обновлено",
+    "accessDenied": "Вашей почте не предоставлен доступ к панели суперадмина. Запросите доступ у root-почты.",
+    "accessTitle": "Доступ суперадмина",
+    "accessDescription": "Только root-почта и почты, которым она предоставила доступ, могут использовать панель суперадмина.",
+    "accessEmailPlaceholder": "new-colleague@example.com",
+    "accessGrant": "Предоставить доступ",
+    "accessEmail": "Почта",
+    "accessGrantedBy": "Кто предоставил",
+    "accessRoot": "Root",
+    "accessRevoke": "Отозвать"
   },
   "discovery": {
     "modeRating": "По рейтингу",
@@ -161,5 +173,12 @@
     "noHotels": "Подходящих отелей пока нет",
     "noRating": "Нет рейтинга",
     "externalNotice": "Демо-режим: в продакшене откроет страницу самого отеля"
+  },
+  "qrCard": {
+    "title": "Создать QR-визитку",
+    "logoLabel": "Загрузить логотип отеля (необязательно)",
+    "scanCaption": "Отсканируйте, чтобы вызвать услуги",
+    "downloadPng": "Скачать PNG",
+    "downloadPdf": "Скачать PDF"
   }
 }

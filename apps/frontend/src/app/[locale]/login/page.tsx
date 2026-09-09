@@ -9,6 +9,7 @@ import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { toast } from '../../../hooks/use-toast';
 import { useAuth } from '../../../lib/auth-context';
+import { getGoogleAuthUrl } from '../../../lib/google-auth';
 import { useTranslations } from '../../../lib/i18n-provider';
 
 export default function LoginPage() {
@@ -58,6 +59,16 @@ export default function LoginPage() {
               {t('auth.submitLogin')}
             </Button>
           </form>
+          <div className="my-4 flex items-center gap-2 text-xs uppercase text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            <span>{t('auth.or')}</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <a href={getGoogleAuthUrl()} className="block">
+            <Button type="button" variant="outline" className="w-full">
+              {t('auth.continueWithGoogle')}
+            </Button>
+          </a>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             {t('auth.noAccount')}{' '}
             <Link href={`/${locale}/register`} className="font-medium text-primary">

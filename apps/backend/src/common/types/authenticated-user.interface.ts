@@ -4,4 +4,5 @@ export interface AuthenticatedUser {
   id: string;
   tenantId: string | null;
   role: UserRole;
+  email: string | null;
 }

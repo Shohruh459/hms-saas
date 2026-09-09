@@ -1,16 +1,13 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserRole } from '@prisma/client';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { RolesGuard } from '../../common/guards/roles.guard';
+import { SuperadminAccessGuard } from '../../common/guards/superadmin-access.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminService } from './admin.service';
 import { UpdateTenantStatusDto } from './dto/update-tenant-status.dto';
 
 @ApiTags('admin')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.SUPER_ADMIN)
+@UseGuards(JwtAuthGuard, SuperadminAccessGuard)
 @Controller('admin/tenants')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
