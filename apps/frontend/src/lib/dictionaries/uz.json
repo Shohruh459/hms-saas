@@ -125,5 +125,41 @@
     "noRequests": "Hozircha so'rovlar yo'q",
     "newRequestToast": "Yangi so'rov keldi!",
     "newPaymentToast": "Yangi to'lov qabul qilindi!"
+  },
+  "superadmin": {
+    "title": "Superadmin panel",
+    "hotel": "Mehmonxona",
+    "region": "Hudud",
+    "status": "Holat",
+    "subscription": "Obuna",
+    "video": "Video",
+    "actions": "Amallar",
+    "status_PENDING": "Kutilmoqda",
+    "status_ACTIVE": "Faol",
+    "status_BLOCKED": "Bloklangan",
+    "status_EXPIRED": "Muddati tugagan",
+    "activate": "Faollashtirish",
+    "block": "Bloklash",
+    "extend30": "+30 kun",
+    "noSubscription": "Belgilanmagan",
+    "watchVideo": "Videoni ko'rish",
+    "noVideo": "Video yuklanmagan",
+    "videoApproved": "Tasdiqlangan",
+    "videoPending": "Ko'rib chiqilmoqda",
+    "approveVideo": "Tasdiqlash",
+    "rejectVideo": "Rad etish",
+    "noHotels": "Hozircha mehmonxonalar yo'q",
+    "updated": "Yangilandi"
+  },
+  "discovery": {
+    "modeRating": "Reyting bo'yicha",
+    "modeMap": "Xarita",
+    "modeReels": "Videolar",
+    "regionLabel": "Hudud",
+    "allRegions": "Barcha hududlar",
+    "bookRoom": "Xonani bron qilish",
+    "noHotels": "Hozircha mos mehmonxona topilmadi",
+    "noRating": "Reyting yo'q",
+    "externalNotice": "Demo rejimida: production'da mehmonxonaning o'z sahifasiga o'tkazadi"
   }
 }

@@ -125,5 +125,41 @@
     "noRequests": "No requests yet",
     "newRequestToast": "New request received!",
     "newPaymentToast": "New payment received!"
+  },
+  "superadmin": {
+    "title": "Superadmin panel",
+    "hotel": "Hotel",
+    "region": "Region",
+    "status": "Status",
+    "subscription": "Subscription",
+    "video": "Video",
+    "actions": "Actions",
+    "status_PENDING": "Pending",
+    "status_ACTIVE": "Active",
+    "status_BLOCKED": "Blocked",
+    "status_EXPIRED": "Expired",
+    "activate": "Activate",
+    "block": "Block",
+    "extend30": "+30 days",
+    "noSubscription": "Not set",
+    "watchVideo": "Watch video",
+    "noVideo": "No video uploaded",
+    "videoApproved": "Approved",
+    "videoPending": "Pending review",
+    "approveVideo": "Approve",
+    "rejectVideo": "Reject",
+    "noHotels": "No hotels yet",
+    "updated": "Updated"
+  },
+  "discovery": {
+    "modeRating": "By rating",
+    "modeMap": "Map",
+    "modeReels": "Videos",
+    "regionLabel": "Region",
+    "allRegions": "All regions",
+    "bookRoom": "Book a room",
+    "noHotels": "No matching hotels yet",
+    "noRating": "No rating",
+    "externalNotice": "Demo mode: in production this opens the hotel's own site"
   }
 }

@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, RoomStatus } from '@prisma/client';
+import { assertTenantActive } from '../../common/utils/assert-tenant-active';
 import { requireTenantId } from '../../common/utils/require-tenant-id';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -72,7 +73,18 @@ export class RoomsService {
    * Mehmonlar uchun ochiq (autentifikatsiyasiz) qidiruv — faqat bo'sh
    * (AVAILABLE) xonalar, narx/sig'im/reyting/qulayliklar bo'yicha filtr.
    */
-  findPublic(tenantId: string | null, filter: FindPublicRoomsDto) {
+  async findPublic(tenantId: string | null, filter: FindPublicRoomsDto) {
+    const resolvedTenantId = requireTenantId(tenantId);
+
+    const tenant = await this.prisma.tenant.findUnique({
+      where: { id: resolvedTenantId },
+      select: { status: true, subscriptionEndsAt: true },
+    });
+    if (!tenant) {
+      throw new NotFoundException('Mehmonxona topilmadi');
+    }
+    assertTenantActive(tenant);
+
     const amenityList = filter.amenities
       ?.split(',')
       .map((item) => item.trim())
@@ -80,7 +92,7 @@ export class RoomsService {
 
     return this.prisma.room.findMany({
       where: {
-        tenantId: requireTenantId(tenantId),
+        tenantId: resolvedTenantId,
         status: RoomStatus.AVAILABLE,
         pricePerNight: {
           gte: filter.minPrice,

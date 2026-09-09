@@ -6,14 +6,17 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validateEnv } from './config/env.validation';
 import { TenantMiddleware } from './common/middleware/tenant.middleware';
+import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
+import { DiscoveryModule } from './modules/discovery/discovery.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomsModule } from './modules/rooms/rooms.module';
 import { ServiceRequestsModule } from './modules/service-requests/service-requests.module';
 import { SupportTicketsModule } from './modules/support-tickets/support-tickets.module';
 import { TenantsModule } from './modules/tenants/tenants.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -32,6 +35,9 @@ import { PrismaModule } from './prisma/prisma.module';
     BookingsModule,
     PaymentsModule,
     TenantsModule,
+    UploadsModule,
+    AdminModule,
+    DiscoveryModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

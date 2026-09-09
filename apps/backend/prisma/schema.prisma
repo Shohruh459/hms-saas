@@ -15,20 +15,34 @@ enum UserRole {
   GUEST
 }
 
+enum TenantStatus {
+  PENDING
+  ACTIVE
+  BLOCKED
+  EXPIRED
+}
+
 model Tenant {
-  id           String   @id @default(uuid())
-  name         String
-  subdomain    String   @unique
-  customDomain String?  @unique
-  locale       String   @default("uz")
-  address      String?
-  phone        String?
-  latitude     Float?
-  longitude    Float?
+  id                 String       @id @default(uuid())
+  name               String
+  subdomain          String       @unique
+  customDomain       String?      @unique
+  locale             String       @default("uz")
+  address            String?
+  phone              String?
+  latitude           Float?
+  longitude          Float?
   /// { click: {...}, payme: {...}, stripe: {...} } — provayder kalitlari/credentiallari
-  paymentKeys  Json?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  paymentKeys        Json?
+  status             TenantStatus @default(ACTIVE)
+  subscriptionEndsAt DateTime?
+  /// Ro'yxatdan o'tish videosi — R2'ga yuklangan fayl manzili
+  videoUrl           String?
+  videoApproved      Boolean      @default(false)
+  /// Ochiq (discovery) API'da hudud bo'yicha filtrlash uchun (masalan "Toshkent")
+  region             String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
   users           User[]
   rooms           Room[]

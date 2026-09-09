@@ -125,5 +125,41 @@
     "noRequests": "Пока нет запросов",
     "newRequestToast": "Новый запрос!",
     "newPaymentToast": "Получен новый платёж!"
+  },
+  "superadmin": {
+    "title": "Панель суперадмина",
+    "hotel": "Отель",
+    "region": "Регион",
+    "status": "Статус",
+    "subscription": "Подписка",
+    "video": "Видео",
+    "actions": "Действия",
+    "status_PENDING": "Ожидает",
+    "status_ACTIVE": "Активен",
+    "status_BLOCKED": "Блокирован",
+    "status_EXPIRED": "Истёк",
+    "activate": "Активировать",
+    "block": "Блокировать",
+    "extend30": "+30 дней",
+    "noSubscription": "Не задано",
+    "watchVideo": "Смотреть видео",
+    "noVideo": "Видео не загружено",
+    "videoApproved": "Подтверждено",
+    "videoPending": "На рассмотрении",
+    "approveVideo": "Подтвердить",
+    "rejectVideo": "Отклонить",
+    "noHotels": "Пока нет отелей",
+    "updated": "Обновлено"
+  },
+  "discovery": {
+    "modeRating": "По рейтингу",
+    "modeMap": "Карта",
+    "modeReels": "Видео",
+    "regionLabel": "Регион",
+    "allRegions": "Все регионы",
+    "bookRoom": "Забронировать номер",
+    "noHotels": "Подходящих отелей пока нет",
+    "noRating": "Нет рейтинга",
+    "externalNotice": "Демо-режим: в продакшене откроет страницу самого отеля"
   }
 }

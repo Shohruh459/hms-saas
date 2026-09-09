@@ -74,6 +74,32 @@ export interface SupportTicket {
   createdAt: string;
 }
 
+export type TenantStatus = 'PENDING' | 'ACTIVE' | 'BLOCKED' | 'EXPIRED';
+
+export interface AdminTenant {
+  id: string;
+  name: string;
+  subdomain: string;
+  region: string | null;
+  status: TenantStatus;
+  subscriptionEndsAt: string | null;
+  videoUrl: string | null;
+  videoApproved: boolean;
+  createdAt: string;
+}
+
+export interface DiscoveryHotel {
+  id: string;
+  name: string;
+  subdomain: string;
+  region: string | null;
+  address: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  videoUrl: string | null;
+  rating: number | null;
+}
+
 export interface PublicTenant {
   id: string;
   name: string;
