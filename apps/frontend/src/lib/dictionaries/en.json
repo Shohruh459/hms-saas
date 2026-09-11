@@ -172,7 +172,13 @@
     "bookRoom": "Book a room",
     "noHotels": "No matching hotels yet",
     "noRating": "No rating",
-    "externalNotice": "Demo mode: in production this opens the hotel's own site"
+    "externalNotice": "Demo mode: in production this opens the hotel's own site",
+    "featuredTitle": "Top picks for you",
+    "featuredSubtitle": "The top-3 highest-rated hotels",
+    "watchVideoCta": "Watch video",
+    "badgeVerified": "Verified",
+    "badgeTopChoice": "Top choice",
+    "badgeExcellent": "Excellent rated"
   },
   "qrCard": {
     "title": "Generate QR Business Card",

@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import type { DiscoveryHotel } from '../../lib/api/types';
 import { useTranslations } from '../../lib/i18n-provider';
+import { HotelBadges } from './hotel-badges';
 import { HotelBookButton } from './hotel-book-button';
 
 // Next.js/webpack Leaflet default marker ikonkalarini o'z asset yo'llari
@@ -34,6 +35,7 @@ export function HotelMap({ hotels }: { hotels: DiscoveryHotel[] }) {
           <Marker key={hotel.id} position={[hotel.latitude, hotel.longitude]}>
             <Popup>
               <div className="space-y-2">
+                <HotelBadges hotel={hotel} rank={hotels.indexOf(hotel)} />
                 <p className="font-semibold">{hotel.name}</p>
                 <p className="text-sm">{hotel.rating ? `★ ${hotel.rating}` : t('discovery.noRating')}</p>
                 <HotelBookButton subdomain={hotel.subdomain} />

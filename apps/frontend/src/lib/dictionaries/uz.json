@@ -172,7 +172,13 @@
     "bookRoom": "Xonani bron qilish",
     "noHotels": "Hozircha mos mehmonxona topilmadi",
     "noRating": "Reyting yo'q",
-    "externalNotice": "Demo rejimida: production'da mehmonxonaning o'z sahifasiga o'tkazadi"
+    "externalNotice": "Demo rejimida: production'da mehmonxonaning o'z sahifasiga o'tkazadi",
+    "featuredTitle": "Eng yaxshi tanlovlar",
+    "featuredSubtitle": "Reyting bo'yicha top-3 mehmonxona",
+    "watchVideoCta": "Videoni ko'rish",
+    "badgeVerified": "Tasdiqlangan",
+    "badgeTopChoice": "Top tanlov",
+    "badgeExcellent": "A'lo baholangan"
   },
   "qrCard": {
     "title": "QR Vizitka Yaratish",

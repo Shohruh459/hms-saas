@@ -1,6 +1,7 @@
 import { Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import type { Room } from '../lib/api/types';
+import { getAmenityIcon } from '../lib/amenity-icons';
 import { useTranslations } from '../lib/i18n-provider';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -10,7 +11,7 @@ export function RoomCard({ room }: { room: Room }) {
   const { t, locale } = useTranslations();
 
   return (
-    <Card>
+    <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/15">
       <CardHeader>
         <CardTitle>
           {room.roomNumber} — {room.type}
@@ -33,11 +34,15 @@ export function RoomCard({ room }: { room: Room }) {
         </p>
         {room.amenities.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {room.amenities.map((amenity) => (
-              <Badge key={amenity} variant="secondary">
-                {t(`filters.amenity_${amenity}`)}
-              </Badge>
-            ))}
+            {room.amenities.map((amenity) => {
+              const Icon = getAmenityIcon(amenity);
+              return (
+                <Badge key={amenity} variant="secondary" className="gap-1">
+                  <Icon className="h-3 w-3" />
+                  {t(`filters.amenity_${amenity}`)}
+                </Badge>
+              );
+            })}
           </div>
         )}
       </CardContent>

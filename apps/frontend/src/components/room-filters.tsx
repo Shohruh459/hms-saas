@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import type { PublicRoomFilters } from '../lib/api/rooms';
+import { getAmenityIcon } from '../lib/amenity-icons';
 import { useTranslations } from '../lib/i18n-provider';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -79,12 +80,19 @@ export function RoomFilters({ onSearch }: { onSearch: (filters: PublicRoomFilter
 
       <div className="flex flex-wrap items-center gap-3">
         <span className="text-sm font-medium">{t('filters.amenities')}:</span>
-        {AMENITY_OPTIONS.map((value) => (
-          <label key={value} className="flex items-center gap-1 text-sm">
-            <input type="checkbox" checked={amenities.includes(value)} onChange={() => toggleAmenity(value)} />
-            {t(`filters.amenity_${value}`)}
-          </label>
-        ))}
+        {AMENITY_OPTIONS.map((value) => {
+          const Icon = getAmenityIcon(value);
+          return (
+            <label
+              key={value}
+              className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm transition-colors hover:bg-secondary"
+            >
+              <input type="checkbox" checked={amenities.includes(value)} onChange={() => toggleAmenity(value)} />
+              <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+              {t(`filters.amenity_${value}`)}
+            </label>
+          );
+        })}
       </div>
     </form>
   );
