@@ -89,20 +89,47 @@ enum RoomStatus {
   MAINTENANCE
 }
 
+/// PRIVATE — butun xona bir guruh/mehmonga beriladi (eski standart xatti-harakat).
+/// SHARED — xona koyka (bed) asosida alohida mehmonlarga bo'lib bron qilinadi (hostel turi).
+enum RoomType {
+  PRIVATE
+  SHARED
+}
+
+/// SHARED xonalar uchun jins bo'yicha cheklov siyosati.
+enum GenderPolicy {
+  MALE_ONLY
+  FEMALE_ONLY
+  MIXED
+}
+
+enum GuestGender {
+  MALE
+  FEMALE
+}
+
 model Room {
-  id            String     @id @default(uuid())
+  id            String       @id @default(uuid())
   tenantId      String
-  tenant        Tenant     @relation(fields: [tenantId], references: [id])
+  tenant        Tenant       @relation(fields: [tenantId], references: [id])
   roomNumber    String
   floor         Int
-  type          String
-  pricePerNight Decimal    @db.Decimal(10, 2)
-  capacity      Int        @default(2)
-  rating        Decimal?   @db.Decimal(2, 1)
-  amenities     String[]   @default([])
-  status        RoomStatus @default(AVAILABLE)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  /// Xona uslubi/darajasi (masalan "Standard", "Deluxe", "Suite") — erkin matn yorlig'i.
+  category      String
+  pricePerNight Decimal      @db.Decimal(10, 2)
+  capacity      Int          @default(2)
+  rating        Decimal?     @db.Decimal(2, 1)
+  amenities     String[]     @default([])
+  status        RoomStatus   @default(AVAILABLE)
+  /// PRIVATE (butun xona) yoki SHARED (koyka asosida, hostel).
+  type          RoomType     @default(PRIVATE)
+  genderPolicy  GenderPolicy @default(MIXED)
+  /// SHARED xonalardagi jami koykalar soni (PRIVATE uchun odatda 1).
+  totalBeds     Int          @default(1)
+  /// SHARED xonalar uchun bitta koyka narxi (mavjud bo'lmasa PRIVATE xona hisoblanadi).
+  pricePerBed   Float?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   serviceRequests ServiceRequest[]
   bookings        Booking[]
@@ -192,6 +219,10 @@ model Booking {
   totalPrice    Decimal       @db.Decimal(10, 2)
   status        BookingStatus @default(PENDING)
   paymentStatus PaymentStatus @default(PENDING)
+  /// SHARED xonalarda mehmon egallayotgan koykalar soni (PRIVATE uchun mazmuni yo'q, doim 1).
+  bedsBooked    Int           @default(1)
+  /// SHARED xonalarda jins siyosati va bir xonadagi mehmonlar jinsini moslashtirish uchun.
+  guestGender   GuestGender?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 

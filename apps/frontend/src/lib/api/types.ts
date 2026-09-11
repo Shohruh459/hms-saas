@@ -15,18 +15,28 @@ export interface AuthResponse {
 }
 
 export type RoomStatus = 'AVAILABLE' | 'OCCUPIED' | 'CLEANING' | 'MAINTENANCE';
+export type RoomType = 'PRIVATE' | 'SHARED';
+export type GenderPolicy = 'MALE_ONLY' | 'FEMALE_ONLY' | 'MIXED';
+export type GuestGender = 'MALE' | 'FEMALE';
 
 export interface Room {
   id: string;
   tenantId: string;
   roomNumber: string;
   floor: number;
-  type: string;
+  /** Xona uslubi/darajasi (masalan Standard, Deluxe, Suite) */
+  category: string;
   pricePerNight: string;
   capacity: number;
   rating: string | null;
   amenities: string[];
   status: RoomStatus;
+  type: RoomType;
+  genderPolicy: GenderPolicy;
+  totalBeds: number;
+  pricePerBed: number | null;
+  /** SHARED xonalar uchun server hisoblagan hozirgi bo'sh koykalar soni */
+  remainingBeds?: number;
 }
 
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED';
@@ -42,6 +52,8 @@ export interface Booking {
   totalPrice: string;
   status: BookingStatus;
   paymentStatus: PaymentStatus;
+  bedsBooked: number;
+  guestGender: GuestGender | null;
   room?: { id: string; roomNumber: string; floor: number };
 }
 

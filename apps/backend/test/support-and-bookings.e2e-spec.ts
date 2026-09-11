@@ -67,7 +67,7 @@ describe('SupportTickets & Bookings (e2e)', () => {
     const roomRes = await request(app.getHttpServer())
       .post('/rooms')
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ roomNumber: '201', floor: 2, type: 'Deluxe', pricePerNight: 200000 });
+      .send({ roomNumber: '201', floor: 2, category: 'Deluxe', pricePerNight: 200000 });
     roomId = roomRes.body.id;
   });
 

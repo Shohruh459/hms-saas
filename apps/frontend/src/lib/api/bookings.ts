@@ -1,11 +1,13 @@
 import { apiClient } from './client';
-import type { Booking } from './types';
+import type { Booking, GuestGender } from './types';
 
 export interface CreateBookingPayload {
   roomId: string;
   checkIn: string;
   checkOut: string;
   guestId?: string;
+  guestGender?: GuestGender;
+  bedsBooked?: number;
 }
 
 export async function createBooking(payload: CreateBookingPayload): Promise<Booking> {

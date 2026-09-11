@@ -70,7 +70,7 @@ export function RoomServiceModal() {
             >
               {rooms.map((room) => (
                 <option key={room.id} value={room.id}>
-                  {room.roomNumber} — {room.type}
+                  {room.roomNumber} — {room.category}
                 </option>
               ))}
             </select>

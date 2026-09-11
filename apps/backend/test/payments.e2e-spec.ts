@@ -78,7 +78,7 @@ describe('Payments (Click/Payme/Stripe) (e2e)', () => {
     const roomRes = await request(app.getHttpServer())
       .post('/rooms')
       .set('Authorization', `Bearer ${ownerToken}`)
-      .send({ roomNumber, floor: 1, type: 'Standard', pricePerNight: 100000 });
+      .send({ roomNumber, floor: 1, category: 'Standard', pricePerNight: 100000 });
 
     const bookingRes = await request(app.getHttpServer())
       .post('/bookings')

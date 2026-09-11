@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, RoomStatus } from '@prisma/client';
+import { BookingStatus, Prisma, Room, RoomStatus, RoomType } from '@prisma/client';
 import { assertTenantActive } from '../../common/utils/assert-tenant-active';
 import { requireTenantId } from '../../common/utils/require-tenant-id';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -25,11 +25,12 @@ export class RoomsService {
     }
   }
 
-  findAll(tenantId: string | null) {
-    return this.prisma.room.findMany({
+  async findAll(tenantId: string | null) {
+    const rooms = await this.prisma.room.findMany({
       where: { tenantId: requireTenantId(tenantId) },
       orderBy: { roomNumber: 'asc' },
     });
+    return this.attachBedAvailability(rooms);
   }
 
   async findOne(tenantId: string | null, id: string) {
@@ -90,7 +91,7 @@ export class RoomsService {
       .map((item) => item.trim())
       .filter(Boolean);
 
-    return this.prisma.room.findMany({
+    const rooms = await this.prisma.room.findMany({
       where: {
         tenantId: resolvedTenantId,
         status: RoomStatus.AVAILABLE,
@@ -104,6 +105,37 @@ export class RoomsService {
       },
       orderBy: { pricePerNight: 'asc' },
     });
+
+    return this.attachBedAvailability(rooms);
+  }
+
+  /**
+   * SHARED xonalar uchun har bir xonaga "remainingBeds" (hozir/kelajakda band
+   * qilinmagan koykalar soni) maydonini qo'shadi — frontendda "Qolgan bo'sh
+   * krovatlar soni" ko'rsatish uchun. PRIVATE xonalar o'zgarishsiz qaytadi.
+   */
+  private async attachBedAvailability<T extends Room>(rooms: T[]): Promise<(T & { remainingBeds?: number })[]> {
+    const sharedRoomIds = rooms.filter((room) => room.type === RoomType.SHARED).map((room) => room.id);
+    if (sharedRoomIds.length === 0) {
+      return rooms;
+    }
+
+    const activeBookings = await this.prisma.booking.groupBy({
+      by: ['roomId'],
+      where: {
+        roomId: { in: sharedRoomIds },
+        status: { notIn: [BookingStatus.CANCELLED, BookingStatus.CHECKED_OUT] },
+        checkOut: { gt: new Date() },
+      },
+      _sum: { bedsBooked: true },
+    });
+    const bookedByRoom = new Map(activeBookings.map((entry) => [entry.roomId, entry._sum.bedsBooked ?? 0]));
+
+    return rooms.map((room) =>
+      room.type === RoomType.SHARED
+        ? { ...room, remainingBeds: Math.max(room.totalBeds - (bookedByRoom.get(room.id) ?? 0), 0) }
+        : room,
+    );
   }
 
   private mapPrismaError(error: unknown) {

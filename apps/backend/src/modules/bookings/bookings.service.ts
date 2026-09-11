@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { BookingStatus, PaymentStatus, UserRole } from '@prisma/client';
+import { BookingStatus, GenderPolicy, GuestGender, PaymentStatus, Room, RoomType, UserRole } from '@prisma/client';
 import { AuthenticatedUser } from '../../common/types/authenticated-user.interface';
 import { requireTenantId } from '../../common/utils/require-tenant-id';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -8,7 +8,18 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { ListBookingsDto } from './dto/list-bookings.dto';
 
 const INCLUDE_RELATIONS = {
-  room: { select: { id: true, roomNumber: true, floor: true, pricePerNight: true } },
+  room: {
+    select: {
+      id: true,
+      roomNumber: true,
+      floor: true,
+      pricePerNight: true,
+      type: true,
+      genderPolicy: true,
+      totalBeds: true,
+      pricePerBed: true,
+    },
+  },
   guest: { select: { id: true, fullName: true, phone: true, email: true } },
 } as const;
 
@@ -42,20 +53,8 @@ export class BookingsService {
 
     const guestId = await this.resolveGuestId(resolvedTenantId, currentUser, dto.guestId);
 
-    const overlapping = await this.prisma.booking.findFirst({
-      where: {
-        roomId: room.id,
-        status: { not: BookingStatus.CANCELLED },
-        checkIn: { lt: checkOut },
-        checkOut: { gt: checkIn },
-      },
-    });
-    if (overlapping) {
-      throw new ConflictException('Xona ushbu sanalar oralig\'ida allaqachon band qilingan');
-    }
-
     const nights = Math.round((checkOut.getTime() - checkIn.getTime()) / MS_PER_DAY);
-    const totalPrice = nights * Number(room.pricePerNight);
+    const { totalPrice, bedsBooked, guestGender } = await this.resolveAvailabilityAndPrice(room, checkIn, checkOut, nights, dto);
 
     const created = await this.prisma.booking.create({
       data: {
@@ -65,6 +64,8 @@ export class BookingsService {
         checkIn,
         checkOut,
         totalPrice,
+        bedsBooked,
+        guestGender,
         status: BookingStatus.PENDING,
         paymentStatus: PaymentStatus.PENDING,
       },
@@ -74,6 +75,77 @@ export class BookingsService {
     this.notifications.notifyAdmins(resolvedTenantId, 'booking.created', created);
 
     return created;
+  }
+
+  /**
+   * PRIVATE — eski mantiq: sanalar ustma-ust tushsa butun xona band deb hisoblanadi.
+   * SHARED — koykalar yig'indisi (`bedsBooked`) taqqoslanadi va jins siyosati
+   * (Gender Lock) tekshiriladi: MALE_ONLY/FEMALE_ONLY — faqat mos jins;
+   * MIXED — xonada allaqachon faol mehmon(lar) bo'lsa, ularning jinsiga mos kelishi kerak.
+   */
+  private async resolveAvailabilityAndPrice(
+    room: Pick<Room, 'id' | 'pricePerNight' | 'type' | 'genderPolicy' | 'totalBeds' | 'pricePerBed'>,
+    checkIn: Date,
+    checkOut: Date,
+    nights: number,
+    dto: CreateBookingDto,
+  ): Promise<{ totalPrice: number; bedsBooked: number; guestGender: GuestGender | null }> {
+    if (room.type === RoomType.PRIVATE) {
+      const overlapping = await this.prisma.booking.findFirst({
+        where: {
+          roomId: room.id,
+          status: { not: BookingStatus.CANCELLED },
+          checkIn: { lt: checkOut },
+          checkOut: { gt: checkIn },
+        },
+      });
+      if (overlapping) {
+        throw new ConflictException('Xona ushbu sanalar oralig\'ida allaqachon band qilingan');
+      }
+
+      return { totalPrice: nights * Number(room.pricePerNight), bedsBooked: 1, guestGender: null };
+    }
+
+    // SHARED xona
+    if (!dto.guestGender) {
+      throw new BadRequestException("Umumiy (SHARED) xona uchun mehmon jinsini ko'rsatish shart");
+    }
+    if (room.genderPolicy === GenderPolicy.MALE_ONLY && dto.guestGender !== GuestGender.MALE) {
+      throw new ConflictException('Bu xona faqat erkaklar uchun');
+    }
+    if (room.genderPolicy === GenderPolicy.FEMALE_ONLY && dto.guestGender !== GuestGender.FEMALE) {
+      throw new ConflictException('Bu xona faqat ayollar uchun');
+    }
+
+    const requestedBeds = dto.bedsBooked ?? 1;
+
+    const overlappingBookings = await this.prisma.booking.findMany({
+      where: {
+        roomId: room.id,
+        status: { not: BookingStatus.CANCELLED },
+        checkIn: { lt: checkOut },
+        checkOut: { gt: checkIn },
+      },
+      select: { bedsBooked: true, guestGender: true },
+    });
+
+    const bookedBeds = overlappingBookings.reduce((sum, booking) => sum + booking.bedsBooked, 0);
+    if (bookedBeds + requestedBeds > room.totalBeds) {
+      throw new ConflictException("Xonada yetarli bo'sh krovat yo'q");
+    }
+
+    if (room.genderPolicy === GenderPolicy.MIXED) {
+      const existingGenders = new Set(overlappingBookings.map((booking) => booking.guestGender).filter(Boolean));
+      if (existingGenders.size > 0 && !existingGenders.has(dto.guestGender)) {
+        throw new ConflictException('Bu xonada allaqachon boshqa jinsdagi mehmon(lar) bor');
+      }
+    }
+
+    return {
+      totalPrice: nights * Number(room.pricePerBed ?? 0) * requestedBeds,
+      bedsBooked: requestedBeds,
+      guestGender: dto.guestGender,
+    };
   }
 
   findAll(tenantId: string | null, currentUser: AuthenticatedUser, filter: ListBookingsDto) {

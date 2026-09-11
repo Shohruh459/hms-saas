@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsISO8601, IsOptional, IsUUID } from 'class-validator';
+import { GuestGender } from '@prisma/client';
+import { IsEnum, IsISO8601, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
 
 export class CreateBookingDto {
   @ApiProperty({ example: 'e2c1f7f0-1234-4a5b-9abc-1234567890ab' })
@@ -21,4 +22,15 @@ export class CreateBookingDto {
   @ApiProperty({ example: '2026-10-05' })
   @IsISO8601()
   checkOut!: string;
+
+  @ApiPropertyOptional({ enum: GuestGender, description: 'SHARED xonalar uchun majburiy — jins siyosati/moslashtirish uchun' })
+  @IsOptional()
+  @IsEnum(GuestGender)
+  guestGender?: GuestGender;
+
+  @ApiPropertyOptional({ example: 1, default: 1, description: 'SHARED xonalarda band qilinayotgan koykalar soni' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  bedsBooked?: number;
 }

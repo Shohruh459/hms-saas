@@ -74,7 +74,7 @@ describe('Rooms & ServiceRequests (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/rooms')
         .set('Authorization', `Bearer ${guestToken}`)
-        .send({ roomNumber: '101', floor: 1, type: 'Standard', pricePerNight: 100000 });
+        .send({ roomNumber: '101', floor: 1, category: 'Standard', pricePerNight: 100000 });
       expect(res.status).toBe(403);
     });
 
@@ -82,7 +82,7 @@ describe('Rooms & ServiceRequests (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/rooms')
         .set('Authorization', `Bearer ${ownerToken}`)
-        .send({ roomNumber: '101', floor: 1, type: 'Standard', pricePerNight: 100000 });
+        .send({ roomNumber: '101', floor: 1, category: 'Standard', pricePerNight: 100000 });
       expect(res.status).toBe(201);
       expect(res.body.status).toBe('AVAILABLE');
       roomId = res.body.id;
@@ -92,7 +92,7 @@ describe('Rooms & ServiceRequests (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post('/rooms')
         .set('Authorization', `Bearer ${ownerToken}`)
-        .send({ roomNumber: '101', floor: 1, type: 'Standard', pricePerNight: 100000 });
+        .send({ roomNumber: '101', floor: 1, category: 'Standard', pricePerNight: 100000 });
       expect(res.status).toBe(409);
     });
 

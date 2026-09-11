@@ -14,7 +14,7 @@ export function RoomCard({ room }: { room: Room }) {
     <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/15">
       <CardHeader>
         <CardTitle>
-          {room.roomNumber} — {room.type}
+          {room.roomNumber} — {room.category}
         </CardTitle>
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span className="flex items-center gap-1">
@@ -26,12 +26,31 @@ export function RoomCard({ room }: { room: Room }) {
             </span>
           )}
         </div>
+        {room.type === 'SHARED' && (
+          <div className="flex flex-wrap gap-1 pt-1">
+            <Badge variant="secondary">{t('room.type_SHARED')}</Badge>
+            {room.genderPolicy === 'MALE_ONLY' && <Badge variant="secondary">{t('room.genderMaleOnly')}</Badge>}
+            {room.genderPolicy === 'FEMALE_ONLY' && <Badge variant="secondary">{t('room.genderFemaleOnly')}</Badge>}
+          </div>
+        )}
       </CardHeader>
       <CardContent className="space-y-2">
-        <p className="text-2xl font-bold">
-          {Number(room.pricePerNight).toLocaleString()}{' '}
-          <span className="text-sm font-normal text-muted-foreground">so&apos;m / {t('room.perNight')}</span>
-        </p>
+        {room.type === 'SHARED' && room.pricePerBed ? (
+          <p className="text-2xl font-bold">
+            {Number(room.pricePerBed).toLocaleString()}{' '}
+            <span className="text-sm font-normal text-muted-foreground">so&apos;m / {t('room.perBed')}</span>
+          </p>
+        ) : (
+          <p className="text-2xl font-bold">
+            {Number(room.pricePerNight).toLocaleString()}{' '}
+            <span className="text-sm font-normal text-muted-foreground">so&apos;m / {t('room.perNight')}</span>
+          </p>
+        )}
+        {room.type === 'SHARED' && (
+          <p className="text-sm text-muted-foreground">
+            {room.remainingBeds ?? room.totalBeds}/{room.totalBeds} {t('room.remainingBeds')}
+          </p>
+        )}
         {room.amenities.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {room.amenities.map((amenity) => {

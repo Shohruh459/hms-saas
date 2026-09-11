@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Badge } from '../../../../components/ui/badge';
+import { Button } from '../../../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
+import { RoomFormDialog } from '../../../../components/room-form-dialog';
 import { toast } from '../../../../hooks/use-toast';
 import { useSocketEvent } from '../../../../hooks/use-socket';
 import { fetchAdminRooms, updateRoomStatus } from '../../../../lib/api/rooms';
@@ -29,6 +31,8 @@ const STATUS_BADGE_VARIANT: Record<RoomStatus, 'success' | 'secondary' | 'warnin
 export default function AdminDashboardPage() {
   const { t } = useTranslations();
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingRoom, setEditingRoom] = useState<Room | null>(null);
 
   async function load() {
     try {
@@ -57,7 +61,17 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">{t('admin.dashboard')}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{t('admin.dashboard')}</h1>
+        <Button
+          onClick={() => {
+            setEditingRoom(null);
+            setFormOpen(true);
+          }}
+        >
+          {t('admin.addRoom')}
+        </Button>
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {rooms.map((room) => (
           <Card key={room.id} className={cn('border-2', STATUS_STYLES[room.status])}>
@@ -67,10 +81,25 @@ export default function AdminDashboardPage() {
                 <Badge variant={STATUS_BADGE_VARIANT[room.status]}>{t(`room.status_${room.status}`)}</Badge>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="mb-2 text-sm text-muted-foreground">
-                {room.type} · {room.floor}-qavat
+            <CardContent className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                {room.category} · {room.floor}-qavat
               </p>
+              <div className="flex flex-wrap gap-1">
+                <Badge variant="secondary">{t(`room.type_${room.type}`)}</Badge>
+                {room.type === 'SHARED' && (
+                  <>
+                    {room.genderPolicy === 'MALE_ONLY' && <Badge variant="secondary">{t('room.genderMaleOnly')}</Badge>}
+                    {room.genderPolicy === 'FEMALE_ONLY' && <Badge variant="secondary">{t('room.genderFemaleOnly')}</Badge>}
+                  </>
+                )}
+              </div>
+              {room.type === 'SHARED' && (
+                <p className="text-xs text-muted-foreground">
+                  {room.pricePerBed ? `${Number(room.pricePerBed).toLocaleString()} so'm ${t('room.perBed')}` : null} ·{' '}
+                  {room.remainingBeds ?? room.totalBeds}/{room.totalBeds} {t('room.bedsUnit')}
+                </p>
+              )}
               <select
                 value={room.status}
                 onChange={(event) => handleStatusChange(room.id, event.target.value as RoomStatus)}
@@ -82,10 +111,29 @@ export default function AdminDashboardPage() {
                   </option>
                 ))}
               </select>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full"
+                onClick={() => {
+                  setEditingRoom(room);
+                  setFormOpen(true);
+                }}
+              >
+                {t('admin.editRoom')}
+              </Button>
             </CardContent>
           </Card>
         ))}
       </div>
+      <RoomFormDialog
+        open={formOpen}
+        onOpenChange={setFormOpen}
+        room={editingRoom}
+        onSaved={(saved) => {
+          setRooms((prev) => (prev.some((room) => room.id === saved.id) ? prev.map((room) => (room.id === saved.id ? saved : room)) : [...prev, saved]));
+        }}
+      />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { toast } from '../../../../../hooks/use-toast';
 import { createBooking } from '../../../../../lib/api/bookings';
 import { fetchPublicRooms } from '../../../../../lib/api/rooms';
 import type { Room } from '../../../../../lib/api/types';
+import type { GuestGender } from '../../../../../lib/api/types';
 import { useAuth } from '../../../../../lib/auth-context';
 import { useTranslations } from '../../../../../lib/i18n-provider';
 
@@ -25,6 +26,8 @@ export default function BookRoomPage() {
   const [room, setRoom] = useState<Room | null>(null);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
+  const [guestGender, setGuestGender] = useState<GuestGender>('MALE');
+  const [bedsBooked, setBedsBooked] = useState(1);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -43,7 +46,9 @@ export default function BookRoomPage() {
     checkIn && checkOut
       ? Math.max(0, Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / MS_PER_DAY))
       : 0;
-  const total = room ? nights * Number(room.pricePerNight) : 0;
+  const isShared = room?.type === 'SHARED';
+  const unitPrice = isShared ? Number(room?.pricePerBed ?? 0) * bedsBooked : Number(room?.pricePerNight ?? 0);
+  const total = room ? nights * unitPrice : 0;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -51,7 +56,13 @@ export default function BookRoomPage() {
 
     setSubmitting(true);
     try {
-      const booking = await createBooking({ roomId: room.id, checkIn, checkOut });
+      const booking = await createBooking({
+        roomId: room.id,
+        checkIn,
+        checkOut,
+        guestGender: isShared ? guestGender : undefined,
+        bedsBooked: isShared ? bedsBooked : undefined,
+      });
       toast({ title: t('booking.success'), variant: 'success' });
       router.push(`/${locale}/bookings/${booking.id}/pay`);
     } catch {
@@ -95,9 +106,37 @@ export default function BookRoomPage() {
                   onChange={(event) => setCheckOut(event.target.value)}
                 />
               </div>
+              {isShared && (
+                <>
+                  <div className="space-y-1">
+                    <Label htmlFor="guestGender">{t('booking.guestGenderLabel')}</Label>
+                    <select
+                      id="guestGender"
+                      value={guestGender}
+                      onChange={(event) => setGuestGender(event.target.value as GuestGender)}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="MALE">{t('booking.genderMale')}</option>
+                      <option value="FEMALE">{t('booking.genderFemale')}</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="bedsBooked">{t('booking.bedsCountLabel')}</Label>
+                    <Input
+                      id="bedsBooked"
+                      type="number"
+                      min={1}
+                      max={room.totalBeds}
+                      required
+                      value={bedsBooked}
+                      onChange={(event) => setBedsBooked(Number(event.target.value))}
+                    />
+                  </div>
+                </>
+              )}
               {nights > 0 && (
                 <p className="text-sm text-muted-foreground">
-                  {nights} {t('booking.nights')} × {Number(room.pricePerNight).toLocaleString()} ={' '}
+                  {nights} {t('booking.nights')} × {unitPrice.toLocaleString()} ={' '}
                   <strong className="text-foreground">{total.toLocaleString()}</strong>
                 </p>
               )}

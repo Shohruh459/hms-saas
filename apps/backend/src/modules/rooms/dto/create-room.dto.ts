@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { RoomStatus } from '@prisma/client';
+import { GenderPolicy, RoomStatus, RoomType } from '@prisma/client';
 import { ArrayUnique, IsArray, IsEnum, IsInt, IsNumber, IsOptional, IsPositive, IsString, Max, Min } from 'class-validator';
 
 export class CreateRoomDto {
@@ -12,14 +12,36 @@ export class CreateRoomDto {
   @Min(0)
   floor!: number;
 
-  @ApiProperty({ example: 'Standard' })
+  @ApiProperty({ example: 'Standard', description: "Xona uslubi/darajasi (masalan Standard, Deluxe, Suite)" })
   @IsString()
-  type!: string;
+  category!: string;
 
   @ApiProperty({ example: 350000 })
   @IsNumber()
   @IsPositive()
   pricePerNight!: number;
+
+  @ApiPropertyOptional({ enum: RoomType, default: RoomType.PRIVATE, description: 'PRIVATE — butun xona, SHARED — koyka asosida (hostel)' })
+  @IsOptional()
+  @IsEnum(RoomType)
+  type?: RoomType;
+
+  @ApiPropertyOptional({ enum: GenderPolicy, default: GenderPolicy.MIXED })
+  @IsOptional()
+  @IsEnum(GenderPolicy)
+  genderPolicy?: GenderPolicy;
+
+  @ApiPropertyOptional({ example: 4, default: 1, description: 'SHARED xonalardagi jami koykalar soni' })
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  totalBeds?: number;
+
+  @ApiPropertyOptional({ example: 80000, description: 'SHARED xonalar uchun bitta koyka narxi' })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  pricePerBed?: number;
 
   @ApiPropertyOptional({ example: 2, default: 2, description: 'Mehmonlar sig\'imi (kishi soni)' })
   @IsOptional()

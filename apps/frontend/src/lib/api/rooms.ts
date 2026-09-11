@@ -1,5 +1,5 @@
 import { apiClient } from './client';
-import type { Room, RoomStatus } from './types';
+import type { GenderPolicy, Room, RoomStatus, RoomType } from './types';
 
 export interface PublicRoomFilters {
   minPrice?: number;
@@ -7,6 +7,19 @@ export interface PublicRoomFilters {
   capacity?: number;
   minRating?: number;
   amenities?: string[];
+}
+
+export interface RoomFormInput {
+  roomNumber: string;
+  floor: number;
+  category: string;
+  pricePerNight: number;
+  capacity?: number;
+  amenities?: string[];
+  type: RoomType;
+  genderPolicy: GenderPolicy;
+  totalBeds: number;
+  pricePerBed?: number;
 }
 
 export async function fetchPublicRooms(filters: PublicRoomFilters = {}): Promise<Room[]> {
@@ -29,5 +42,15 @@ export async function fetchAdminRooms(): Promise<Room[]> {
 
 export async function updateRoomStatus(roomId: string, status: RoomStatus): Promise<Room> {
   const { data } = await apiClient.patch<Room>(`/rooms/${roomId}/status`, { status });
+  return data;
+}
+
+export async function createRoom(input: RoomFormInput): Promise<Room> {
+  const { data } = await apiClient.post<Room>('/rooms', input);
+  return data;
+}
+
+export async function updateRoom(roomId: string, input: RoomFormInput): Promise<Room> {
+  const { data } = await apiClient.patch<Room>(`/rooms/${roomId}`, input);
   return data;
 }
