@@ -107,6 +107,44 @@ export interface DiscoveryHotel {
   rating: number | null;
 }
 
+export type FeedbackCategory = 'COMPLAINT' | 'SUGGESTION' | 'GENERAL';
+export type FeedbackStatus = 'PENDING' | 'IN_REVIEW' | 'RESOLVED';
+
+export interface Feedback {
+  id: string;
+  tenantId: string;
+  roomNumber: string | null;
+  guestPhone: string | null;
+  guestName: string | null;
+  category: FeedbackCategory;
+  message: string;
+  aiSummary: string | null;
+  status: FeedbackStatus;
+  adminReply: string | null;
+  repliedAt: string | null;
+  repliedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FeedbackWithAiReply extends Feedback {
+  aiReply: string;
+}
+
+export interface MyFeedbackTicket {
+  id: string;
+  message: string;
+  category: FeedbackCategory;
+  status: FeedbackStatus;
+  adminReply: string | null;
+  repliedAt: string | null;
+  createdAt: string;
+}
+
+export interface AdminFeedback extends Feedback {
+  tenant: { id: string; name: string; subdomain: string; phone: string | null };
+}
+
 export interface PublicTenant {
   id: string;
   name: string;

@@ -161,7 +161,19 @@
     "accessEmail": "Email",
     "accessGrantedBy": "Granted by",
     "accessRoot": "Root",
-    "accessRevoke": "Revoke"
+    "accessRevoke": "Revoke",
+    "tabTenants": "Hotels",
+    "tabAccess": "Access",
+    "tabFeedback": "Complaints & Feedback",
+    "feedbackHotel": "Hotel",
+    "feedbackContact": "Guest",
+    "feedbackMessage": "Message",
+    "feedbackNoData": "No messages yet",
+    "feedbackReply": "Reply",
+    "feedbackViewReply": "View reply",
+    "feedbackReplyModalTitle": "Reply to message",
+    "feedbackReplyPlaceholder": "Write your reply to the guest...",
+    "feedbackSubmitReply": "Save reply"
   },
   "discovery": {
     "modeRating": "By rating",
@@ -186,5 +198,25 @@
     "scanCaption": "Scan to call services",
     "downloadPng": "Download PNG",
     "downloadPdf": "Download PDF"
+  },
+  "feedback": {
+    "widgetTitle": "AI Complaints & Feedback",
+    "widgetSubtitle": "Write your message, AI replies instantly",
+    "tabSend": "Send message",
+    "tabMine": "My messages",
+    "namePlaceholder": "Your name (optional)",
+    "phonePlaceholder": "Your phone number",
+    "roomPlaceholder": "Room number (optional)",
+    "messagePlaceholder": "Write your complaint or suggestion...",
+    "send": "Send",
+    "search": "Search",
+    "noTickets": "No messages found for this phone number",
+    "adminReplyLabel": "Hotel reply",
+    "status_PENDING": "Pending",
+    "status_IN_REVIEW": "In review",
+    "status_RESOLVED": "Resolved",
+    "category_COMPLAINT": "Complaint",
+    "category_SUGGESTION": "Suggestion",
+    "category_GENERAL": "General"
   }
 }

@@ -161,7 +161,19 @@
     "accessEmail": "Почта",
     "accessGrantedBy": "Кто предоставил",
     "accessRoot": "Root",
-    "accessRevoke": "Отозвать"
+    "accessRevoke": "Отозвать",
+    "tabTenants": "Отели",
+    "tabAccess": "Доступы",
+    "tabFeedback": "Жалобы и обращения",
+    "feedbackHotel": "Отель",
+    "feedbackContact": "Гость",
+    "feedbackMessage": "Обращение",
+    "feedbackNoData": "Пока нет обращений",
+    "feedbackReply": "Ответить",
+    "feedbackViewReply": "Смотреть ответ",
+    "feedbackReplyModalTitle": "Ответ на обращение",
+    "feedbackReplyPlaceholder": "Напишите ответ гостю...",
+    "feedbackSubmitReply": "Сохранить ответ"
   },
   "discovery": {
     "modeRating": "По рейтингу",
@@ -186,5 +198,25 @@
     "scanCaption": "Отсканируйте, чтобы вызвать услуги",
     "downloadPng": "Скачать PNG",
     "downloadPdf": "Скачать PDF"
+  },
+  "feedback": {
+    "widgetTitle": "AI Жалобы и предложения",
+    "widgetSubtitle": "Напишите обращение, AI ответит сразу",
+    "tabSend": "Отправить обращение",
+    "tabMine": "Мои обращения",
+    "namePlaceholder": "Ваше имя (необязательно)",
+    "phonePlaceholder": "Ваш номер телефона",
+    "roomPlaceholder": "Номер комнаты (необязательно)",
+    "messagePlaceholder": "Напишите вашу жалобу или предложение...",
+    "send": "Отправить",
+    "search": "Поиск",
+    "noTickets": "По этому номеру телефона обращений не найдено",
+    "adminReplyLabel": "Ответ отеля",
+    "status_PENDING": "В ожидании",
+    "status_IN_REVIEW": "На рассмотрении",
+    "status_RESOLVED": "Решено",
+    "category_COMPLAINT": "Жалоба",
+    "category_SUGGESTION": "Предложение",
+    "category_GENERAL": "Общее"
   }
 }

@@ -2,9 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, type FormEvent } from 'react';
+import { SuperadminFeedbackTab } from '../../../../components/admin/superadmin-feedback-tab';
 import { Badge } from '../../../../components/ui/badge';
 import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../../components/ui/tabs';
 import { toast } from '../../../../hooks/use-toast';
 import {
   approveTenantVideo,
@@ -130,173 +132,186 @@ export default function SuperadminPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-2xl font-bold">{t('superadmin.title')}</h1>
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold">{t('superadmin.title')}</h1>
 
-        {loading ? (
-          <p className="text-muted-foreground">{t('common.loading')}</p>
-        ) : tenants.length === 0 ? (
-          <p className="text-muted-foreground">{t('superadmin.noHotels')}</p>
-        ) : (
-          <div className="overflow-x-auto rounded-lg border bg-card">
-            <table className="w-full min-w-[860px] text-sm">
-              <thead className="bg-secondary/50 text-left">
-                <tr>
-                  <th className="p-3 font-medium">{t('superadmin.hotel')}</th>
-                  <th className="p-3 font-medium">{t('superadmin.region')}</th>
-                  <th className="p-3 font-medium">{t('superadmin.status')}</th>
-                  <th className="p-3 font-medium">{t('superadmin.subscription')}</th>
-                  <th className="p-3 font-medium">{t('superadmin.video')}</th>
-                  <th className="p-3 font-medium">{t('superadmin.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tenants.map((tenant) => {
-                  const isBusy = busyId === tenant.id;
-                  return (
-                    <tr key={tenant.id} className="border-t align-top">
-                      <td className="p-3">
-                        <div className="font-medium">{tenant.name}</div>
-                        <div className="text-xs text-muted-foreground">{tenant.subdomain}</div>
-                      </td>
-                      <td className="p-3">{tenant.region ?? '—'}</td>
-                      <td className="p-3">
-                        <Badge variant={STATUS_BADGE_VARIANT[tenant.status]}>{t(`superadmin.status_${tenant.status}`)}</Badge>
-                      </td>
-                      <td className="p-3">
-                        {tenant.subscriptionEndsAt
-                          ? new Date(tenant.subscriptionEndsAt).toLocaleDateString(locale)
-                          : t('superadmin.noSubscription')}
-                      </td>
-                      <td className="p-3">
-                        {tenant.videoUrl ? (
-                          <div className="space-y-1">
-                            <a href={tenant.videoUrl} target="_blank" rel="noreferrer" className="text-primary underline">
-                              {t('superadmin.watchVideo')}
-                            </a>
-                            <div>
-                              <Badge variant={tenant.videoApproved ? 'success' : 'warning'}>
-                                {tenant.videoApproved ? t('superadmin.videoApproved') : t('superadmin.videoPending')}
-                              </Badge>
+      <Tabs defaultValue="tenants">
+        <TabsList>
+          <TabsTrigger value="tenants">{t('superadmin.tabTenants')}</TabsTrigger>
+          <TabsTrigger value="access">{t('superadmin.tabAccess')}</TabsTrigger>
+          <TabsTrigger value="feedback">{t('superadmin.tabFeedback')}</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="tenants" className="space-y-4">
+          {loading ? (
+            <p className="text-muted-foreground">{t('common.loading')}</p>
+          ) : tenants.length === 0 ? (
+            <p className="text-muted-foreground">{t('superadmin.noHotels')}</p>
+          ) : (
+            <div className="overflow-x-auto rounded-lg border bg-card">
+              <table className="w-full min-w-[860px] text-sm">
+                <thead className="bg-secondary/50 text-left">
+                  <tr>
+                    <th className="p-3 font-medium">{t('superadmin.hotel')}</th>
+                    <th className="p-3 font-medium">{t('superadmin.region')}</th>
+                    <th className="p-3 font-medium">{t('superadmin.status')}</th>
+                    <th className="p-3 font-medium">{t('superadmin.subscription')}</th>
+                    <th className="p-3 font-medium">{t('superadmin.video')}</th>
+                    <th className="p-3 font-medium">{t('superadmin.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tenants.map((tenant) => {
+                    const isBusy = busyId === tenant.id;
+                    return (
+                      <tr key={tenant.id} className="border-t align-top">
+                        <td className="p-3">
+                          <div className="font-medium">{tenant.name}</div>
+                          <div className="text-xs text-muted-foreground">{tenant.subdomain}</div>
+                        </td>
+                        <td className="p-3">{tenant.region ?? '—'}</td>
+                        <td className="p-3">
+                          <Badge variant={STATUS_BADGE_VARIANT[tenant.status]}>
+                            {t(`superadmin.status_${tenant.status}`)}
+                          </Badge>
+                        </td>
+                        <td className="p-3">
+                          {tenant.subscriptionEndsAt
+                            ? new Date(tenant.subscriptionEndsAt).toLocaleDateString(locale)
+                            : t('superadmin.noSubscription')}
+                        </td>
+                        <td className="p-3">
+                          {tenant.videoUrl ? (
+                            <div className="space-y-1">
+                              <a href={tenant.videoUrl} target="_blank" rel="noreferrer" className="text-primary underline">
+                                {t('superadmin.watchVideo')}
+                              </a>
+                              <div>
+                                <Badge variant={tenant.videoApproved ? 'success' : 'warning'}>
+                                  {tenant.videoApproved ? t('superadmin.videoApproved') : t('superadmin.videoPending')}
+                                </Badge>
+                              </div>
                             </div>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">{t('superadmin.noVideo')}</span>
-                        )}
-                      </td>
-                      <td className="p-3">
-                        <div className="flex flex-wrap gap-2">
-                          {tenant.status !== 'ACTIVE' && (
-                            <Button
-                              size="sm"
-                              disabled={isBusy}
-                              onClick={() => run(tenant.id, () => updateTenantStatus(tenant.id, 'ACTIVE'))}
-                            >
-                              {t('superadmin.activate')}
-                            </Button>
+                          ) : (
+                            <span className="text-muted-foreground">{t('superadmin.noVideo')}</span>
                           )}
-                          {tenant.status !== 'BLOCKED' && (
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              disabled={isBusy}
-                              onClick={() => run(tenant.id, () => updateTenantStatus(tenant.id, 'BLOCKED'))}
-                            >
-                              {t('superadmin.block')}
-                            </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={isBusy}
-                            onClick={() => run(tenant.id, () => extendTenantSubscription(tenant.id))}
-                          >
-                            {t('superadmin.extend30')}
-                          </Button>
-                          {tenant.videoUrl && !tenant.videoApproved && (
-                            <Button
-                              size="sm"
-                              disabled={isBusy}
-                              onClick={() => run(tenant.id, () => approveTenantVideo(tenant.id))}
-                            >
-                              {t('superadmin.approveVideo')}
-                            </Button>
-                          )}
-                          {tenant.videoUrl && tenant.videoApproved && (
+                        </td>
+                        <td className="p-3">
+                          <div className="flex flex-wrap gap-2">
+                            {tenant.status !== 'ACTIVE' && (
+                              <Button
+                                size="sm"
+                                disabled={isBusy}
+                                onClick={() => run(tenant.id, () => updateTenantStatus(tenant.id, 'ACTIVE'))}
+                              >
+                                {t('superadmin.activate')}
+                              </Button>
+                            )}
+                            {tenant.status !== 'BLOCKED' && (
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                disabled={isBusy}
+                                onClick={() => run(tenant.id, () => updateTenantStatus(tenant.id, 'BLOCKED'))}
+                              >
+                                {t('superadmin.block')}
+                              </Button>
+                            )}
                             <Button
                               size="sm"
                               variant="outline"
                               disabled={isBusy}
-                              onClick={() => run(tenant.id, () => rejectTenantVideo(tenant.id))}
+                              onClick={() => run(tenant.id, () => extendTenantSubscription(tenant.id))}
                             >
-                              {t('superadmin.rejectVideo')}
+                              {t('superadmin.extend30')}
                             </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                            {tenant.videoUrl && !tenant.videoApproved && (
+                              <Button
+                                size="sm"
+                                disabled={isBusy}
+                                onClick={() => run(tenant.id, () => approveTenantVideo(tenant.id))}
+                              >
+                                {t('superadmin.approveVideo')}
+                              </Button>
+                            )}
+                            {tenant.videoUrl && tenant.videoApproved && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                disabled={isBusy}
+                                onClick={() => run(tenant.id, () => rejectTenantVideo(tenant.id))}
+                              >
+                                {t('superadmin.rejectVideo')}
+                              </Button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="access" className="space-y-4">
+          <p className="text-sm text-muted-foreground">{t('superadmin.accessDescription')}</p>
+
+          <form onSubmit={handleGrant} className="flex max-w-md flex-wrap gap-2">
+            <Input
+              type="email"
+              required
+              placeholder={t('superadmin.accessEmailPlaceholder')}
+              value={newEmail}
+              onChange={(event) => setNewEmail(event.target.value)}
+              className="flex-1"
+            />
+            <Button type="submit" disabled={grantSubmitting}>
+              {t('superadmin.accessGrant')}
+            </Button>
+          </form>
+
+          <div className="overflow-x-auto rounded-lg border bg-card">
+            <table className="w-full min-w-[520px] text-sm">
+              <thead className="bg-secondary/50 text-left">
+                <tr>
+                  <th className="p-3 font-medium">{t('superadmin.accessEmail')}</th>
+                  <th className="p-3 font-medium">{t('superadmin.accessGrantedBy')}</th>
+                  <th className="p-3 font-medium">{t('superadmin.actions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {accessList.map((entry) => (
+                  <tr key={entry.email} className="border-t">
+                    <td className="p-3">
+                      <div className="font-medium">{entry.email}</div>
+                      {entry.isRoot && <Badge variant="secondary">{t('superadmin.accessRoot')}</Badge>}
+                    </td>
+                    <td className="p-3 text-muted-foreground">{entry.grantedBy ?? '—'}</td>
+                    <td className="p-3">
+                      {!entry.isRoot && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={busyId === entry.email}
+                          onClick={() => handleRevoke(entry.email)}
+                        >
+                          {t('superadmin.accessRevoke')}
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-        )}
-      </div>
+        </TabsContent>
 
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold">{t('superadmin.accessTitle')}</h2>
-        <p className="text-sm text-muted-foreground">{t('superadmin.accessDescription')}</p>
-
-        <form onSubmit={handleGrant} className="flex max-w-md flex-wrap gap-2">
-          <Input
-            type="email"
-            required
-            placeholder={t('superadmin.accessEmailPlaceholder')}
-            value={newEmail}
-            onChange={(event) => setNewEmail(event.target.value)}
-            className="flex-1"
-          />
-          <Button type="submit" disabled={grantSubmitting}>
-            {t('superadmin.accessGrant')}
-          </Button>
-        </form>
-
-        <div className="overflow-x-auto rounded-lg border bg-card">
-          <table className="w-full min-w-[520px] text-sm">
-            <thead className="bg-secondary/50 text-left">
-              <tr>
-                <th className="p-3 font-medium">{t('superadmin.accessEmail')}</th>
-                <th className="p-3 font-medium">{t('superadmin.accessGrantedBy')}</th>
-                <th className="p-3 font-medium">{t('superadmin.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {accessList.map((entry) => (
-                <tr key={entry.email} className="border-t">
-                  <td className="p-3">
-                    <div className="font-medium">{entry.email}</div>
-                    {entry.isRoot && <Badge variant="secondary">{t('superadmin.accessRoot')}</Badge>}
-                  </td>
-                  <td className="p-3 text-muted-foreground">{entry.grantedBy ?? '—'}</td>
-                  <td className="p-3">
-                    {!entry.isRoot && (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        disabled={busyId === entry.email}
-                        onClick={() => handleRevoke(entry.email)}
-                      >
-                        {t('superadmin.accessRevoke')}
-                      </Button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <TabsContent value="feedback">
+          <SuperadminFeedbackTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

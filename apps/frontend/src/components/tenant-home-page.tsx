@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ContactSection } from './contact-section';
+import { AiFeedbackWidget } from './feedback/ai-feedback-widget';
 import { RoomFilters } from './room-filters';
 import { RoomGrid } from './room-grid';
 import { SiteHeader } from './site-header';
@@ -51,6 +52,7 @@ export function TenantHomePage() {
 
         <ContactSection />
       </main>
+      <AiFeedbackWidget />
     </>
   );
 }

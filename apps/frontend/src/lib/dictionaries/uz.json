@@ -161,7 +161,19 @@
     "accessEmail": "Pochta",
     "accessGrantedBy": "Kim ruxsat berdi",
     "accessRoot": "Root",
-    "accessRevoke": "Bekor qilish"
+    "accessRevoke": "Bekor qilish",
+    "tabTenants": "Mehmonxonalar",
+    "tabAccess": "Ruxsatlar",
+    "tabFeedback": "Shikoyat va Murojaatlar",
+    "feedbackHotel": "Mehmonxona",
+    "feedbackContact": "Mehmon",
+    "feedbackMessage": "Murojaat",
+    "feedbackNoData": "Hozircha murojaatlar yo'q",
+    "feedbackReply": "Javob yozish",
+    "feedbackViewReply": "Javobni ko'rish",
+    "feedbackReplyModalTitle": "Murojaatga javob yozish",
+    "feedbackReplyPlaceholder": "Mehmonga javobingizni yozing...",
+    "feedbackSubmitReply": "Javobni saqlash"
   },
   "discovery": {
     "modeRating": "Reyting bo'yicha",
@@ -186,5 +198,25 @@
     "scanCaption": "Xizmatlarni chaqirish uchun skanerlang",
     "downloadPng": "PNG yuklab olish",
     "downloadPdf": "PDF yuklab olish"
+  },
+  "feedback": {
+    "widgetTitle": "AI Shikoyat va Takliflar",
+    "widgetSubtitle": "Murojaatingizni yozing, AI darhol javob beradi",
+    "tabSend": "Murojaat yuborish",
+    "tabMine": "Mening murojaatlarim",
+    "namePlaceholder": "Ismingiz (ixtiyoriy)",
+    "phonePlaceholder": "Telefon raqamingiz",
+    "roomPlaceholder": "Xona raqami (ixtiyoriy)",
+    "messagePlaceholder": "Shikoyat yoki taklifingizni yozing...",
+    "send": "Yuborish",
+    "search": "Qidirish",
+    "noTickets": "Bu telefon raqami bo'yicha murojaatlar topilmadi",
+    "adminReplyLabel": "Mehmonxona javobi",
+    "status_PENDING": "Kutilmoqda",
+    "status_IN_REVIEW": "Ko'rib chiqilmoqda",
+    "status_RESOLVED": "Hal qilindi",
+    "category_COMPLAINT": "Shikoyat",
+    "category_SUGGESTION": "Taklif",
+    "category_GENERAL": "Umumiy"
   }
 }

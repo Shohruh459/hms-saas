@@ -10,6 +10,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { DiscoveryModule } from './modules/discovery/discovery.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { RoomsModule } from './modules/rooms/rooms.module';
@@ -38,6 +39,7 @@ import { PrismaModule } from './prisma/prisma.module';
     UploadsModule,
     AdminModule,
     DiscoveryModule,
+    FeedbackModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
