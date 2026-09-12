@@ -56,7 +56,7 @@ export function DiscoveryHome() {
   return (
     <>
       <SiteHeader />
-      <main className="container space-y-8 py-8">
+      <main className="container space-y-8 pb-28 pt-8 sm:pb-8">
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,9 +74,9 @@ export function DiscoveryHome() {
         {loading ? (
           <p className="text-center text-muted-foreground">{t('common.loading')}</p>
         ) : (
-          <Tabs id="discovery-results" value={activeTab} onValueChange={setActiveTab} className="pb-24 sm:pb-0">
+          <Tabs id="discovery-results" value={activeTab} onValueChange={setActiveTab}>
             <TabsList
-              className="fixed inset-x-3 bottom-3 z-30 flex w-auto items-center justify-around gap-1 rounded-2xl border bg-background/95 p-1.5 shadow-lg backdrop-blur-md sm:static sm:inset-auto sm:bottom-auto sm:z-auto sm:mx-auto sm:w-fit sm:justify-center sm:gap-1 sm:rounded-md sm:border-none sm:bg-secondary sm:p-1 sm:shadow-none sm:backdrop-blur-none"
+              className="fixed bottom-3 left-1/2 z-50 flex w-[min(92vw,380px)] -translate-x-1/2 items-center justify-around gap-1 rounded-2xl border border-black/5 bg-white/80 p-1.5 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-zinc-900/80 sm:static sm:inset-auto sm:bottom-auto sm:left-auto sm:z-auto sm:w-fit sm:-translate-x-0 sm:mx-auto sm:justify-center sm:gap-1 sm:rounded-md sm:border-none sm:bg-secondary sm:p-1 sm:shadow-none sm:backdrop-blur-none"
             >
               <TabsTrigger
                 value="rating"

@@ -48,7 +48,7 @@ export function MobileNavSheet({ children }: { children: ReactNode }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/50 md:hidden"
+              className="fixed inset-0 z-[60] bg-black/50 md:hidden"
               onClick={() => setOpen(false)}
             />
             <motion.div
@@ -60,7 +60,7 @@ export function MobileNavSheet({ children }: { children: ReactNode }) {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
-              className="fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] flex-col gap-5 bg-background p-5 shadow-2xl md:hidden"
+              className="fixed inset-y-0 right-0 z-[60] flex w-72 max-w-[85vw] flex-col gap-5 bg-background p-5 shadow-2xl md:hidden"
             >
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-muted-foreground">{t('nav.menu')}</span>
