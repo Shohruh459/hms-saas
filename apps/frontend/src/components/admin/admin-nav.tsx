@@ -14,12 +14,14 @@ export function AdminNav() {
 
   const isHousekeeper = user?.role === 'HOUSEKEEPER';
   const isSuperAdmin = user?.role === 'SUPER_ADMIN';
+  const canViewAnalytics = user?.role === 'HOTEL_OWNER' || isSuperAdmin;
 
   const links = [
     !isHousekeeper && { href: `/${locale}/admin/dashboard`, label: t('admin.dashboard') },
     !isHousekeeper && { href: `/${locale}/admin/service-requests`, label: t('admin.serviceRequests') },
     { href: `/${locale}/admin/tasks`, label: t('admin.tasks') },
     !isHousekeeper && { href: `/${locale}/admin/support-tickets`, label: t('admin.supportTickets') },
+    canViewAnalytics && { href: `/${locale}/admin/analytics`, label: t('analytics.title') },
     !isHousekeeper && { href: `/${locale}/admin/settings`, label: t('admin.settings') },
     isSuperAdmin && { href: `/${locale}/admin/superadmin`, label: t('superadmin.title') },
   ].filter(Boolean) as { href: string; label: string }[];

@@ -157,6 +157,43 @@ export interface AdminFeedback extends Feedback {
   tenant: { id: string; name: string; subdomain: string; phone: string | null };
 }
 
+export interface AnalyticsKpis {
+  totalRevenue: number;
+  occupancyRate: number;
+  totalBookings: number;
+  revPar: number;
+  adr: number;
+}
+
+export interface AnalyticsTimeSeriesPoint {
+  date: string;
+  revenue: number;
+  bookings: number;
+}
+
+export interface AnalyticsRoomTypeBreakdown {
+  type: RoomType;
+  revenue: number;
+  share: number;
+}
+
+export interface AnalyticsTopRoom {
+  roomId: string;
+  roomNumber: string;
+  category: string;
+  revenue: number;
+  bookings: number;
+}
+
+export interface AnalyticsOverview {
+  range: { startDate: string; endDate: string };
+  granularity: 'day' | 'month';
+  kpis: AnalyticsKpis;
+  timeSeries: AnalyticsTimeSeriesPoint[];
+  roomTypeBreakdown: AnalyticsRoomTypeBreakdown[];
+  topRooms: AnalyticsTopRoom[];
+}
+
 export interface PublicTenant {
   id: string;
   name: string;

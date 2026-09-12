@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { validateEnv } from './config/env.validation';
 import { TenantMiddleware } from './common/middleware/tenant.middleware';
 import { AdminModule } from './modules/admin/admin.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { DiscoveryModule } from './modules/discovery/discovery.module';
@@ -40,6 +41,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AdminModule,
     DiscoveryModule,
     FeedbackModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

@@ -254,5 +254,25 @@
     "category_COMPLAINT": "Shikoyat",
     "category_SUGGESTION": "Taklif",
     "category_GENERAL": "Umumiy"
+  },
+  "analytics": {
+    "title": "Hisobotlar va Analitika",
+    "totalRevenue": "Jami daromad",
+    "occupancyRate": "Bandlik darajasi",
+    "totalBookings": "Jami bronlar",
+    "revPar": "RevPAR",
+    "revenue": "Daromad",
+    "bookingsCount": "Bronlar soni",
+    "revenueTrend": "Daromad tendensiyasi",
+    "occupancyTrend": "Xonalar bandligi dinamikasi",
+    "roomTypeSplit": "Xona turi bo'yicha daromad ulushi",
+    "topRooms": "Eng ko'p daromad keltirgan xonalar",
+    "noData": "Ma'lumot yo'q",
+    "exportCsv": "CSV yuklab olish",
+    "accessDenied": "Sizda ushbu bo'limga kirish huquqi yo'q",
+    "filterThisMonth": "Shu oy",
+    "filterLast30": "Oxirgi 30 kun",
+    "filterThisYear": "Shu yil",
+    "filterCustom": "Boshqa sana"
   }
 }

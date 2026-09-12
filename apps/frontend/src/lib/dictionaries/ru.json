@@ -254,5 +254,25 @@
     "category_COMPLAINT": "Жалоба",
     "category_SUGGESTION": "Предложение",
     "category_GENERAL": "Общее"
+  },
+  "analytics": {
+    "title": "Отчёты и аналитика",
+    "totalRevenue": "Общий доход",
+    "occupancyRate": "Загруженность",
+    "totalBookings": "Всего бронирований",
+    "revPar": "RevPAR",
+    "revenue": "Доход",
+    "bookingsCount": "Кол-во бронирований",
+    "revenueTrend": "Динамика дохода",
+    "occupancyTrend": "Динамика загруженности номеров",
+    "roomTypeSplit": "Доля дохода по типу номеров",
+    "topRooms": "Самые доходные номера",
+    "noData": "Нет данных",
+    "exportCsv": "Скачать CSV",
+    "accessDenied": "У вас нет доступа к этому разделу",
+    "filterThisMonth": "Этот месяц",
+    "filterLast30": "Последние 30 дней",
+    "filterThisYear": "Этот год",
+    "filterCustom": "Другая дата"
   }
 }

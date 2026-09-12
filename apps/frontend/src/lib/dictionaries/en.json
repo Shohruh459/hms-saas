@@ -254,5 +254,25 @@
     "category_COMPLAINT": "Complaint",
     "category_SUGGESTION": "Suggestion",
     "category_GENERAL": "General"
+  },
+  "analytics": {
+    "title": "Reports & Analytics",
+    "totalRevenue": "Total Revenue",
+    "occupancyRate": "Occupancy Rate",
+    "totalBookings": "Total Bookings",
+    "revPar": "RevPAR",
+    "revenue": "Revenue",
+    "bookingsCount": "Bookings",
+    "revenueTrend": "Revenue Trend",
+    "occupancyTrend": "Room Occupancy Trend",
+    "roomTypeSplit": "Revenue Share by Room Type",
+    "topRooms": "Top-Performing Rooms",
+    "noData": "No data",
+    "exportCsv": "Export CSV",
+    "accessDenied": "You don't have access to this section",
+    "filterThisMonth": "This month",
+    "filterLast30": "Last 30 days",
+    "filterThisYear": "This year",
+    "filterCustom": "Custom date"
   }
 }
