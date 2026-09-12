@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { List, Map, Video } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useState } from 'react';
 import { ContactSection } from '../contact-section';
@@ -12,6 +13,7 @@ import { useTranslations } from '../../lib/i18n-provider';
 import { FeaturedHeroCarousel } from './featured-hero-carousel';
 import { HotelRatingList } from './hotel-rating-list';
 import { HotelReelsFeed } from './hotel-reels-feed';
+import { QuickSearchBar } from './quick-search-bar';
 
 // Leaflet `window`ga bog'liq — server-side render qilinmasligi kerak.
 const HotelMap = dynamic(() => import('./hotel-map').then((mod) => mod.HotelMap), { ssr: false });
@@ -65,33 +67,35 @@ export function DiscoveryHome() {
           <p className="text-muted-foreground">{t('home.heroSubtitle')}</p>
         </motion.section>
 
-        {!loading && hotels.length > 0 && <FeaturedHeroCarousel hotels={hotels} onWatchVideo={handleWatchVideo} />}
+        <QuickSearchBar regions={regions} region={region} onRegionChange={setRegion} />
 
-        {regions.length > 0 && (
-          <div className="flex justify-center">
-            <select
-              value={region}
-              onChange={(event) => setRegion(event.target.value)}
-              className="rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="">{t('discovery.allRegions')}</option>
-              {regions.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        {!loading && hotels.length > 0 && <FeaturedHeroCarousel hotels={hotels} onWatchVideo={handleWatchVideo} />}
 
         {loading ? (
           <p className="text-center text-muted-foreground">{t('common.loading')}</p>
         ) : (
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mx-auto flex w-fit">
-              <TabsTrigger value="rating">{t('discovery.modeRating')}</TabsTrigger>
-              <TabsTrigger value="map">{t('discovery.modeMap')}</TabsTrigger>
-              <TabsTrigger value="reels">{t('discovery.modeReels')}</TabsTrigger>
+          <Tabs id="discovery-results" value={activeTab} onValueChange={setActiveTab} className="pb-24 sm:pb-0">
+            <TabsList
+              className="fixed inset-x-3 bottom-3 z-30 flex w-auto items-center justify-around gap-1 rounded-2xl border bg-background/95 p-1.5 shadow-lg backdrop-blur-md sm:static sm:inset-auto sm:bottom-auto sm:z-auto sm:mx-auto sm:w-fit sm:justify-center sm:gap-1 sm:rounded-md sm:border-none sm:bg-secondary sm:p-1 sm:shadow-none sm:backdrop-blur-none"
+            >
+              <TabsTrigger
+                value="rating"
+                className="flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] sm:flex-none sm:flex-row sm:gap-1.5 sm:py-1.5 sm:text-sm"
+              >
+                <List className="h-5 w-5 sm:h-4 sm:w-4" /> {t('discovery.modeRating')}
+              </TabsTrigger>
+              <TabsTrigger
+                value="map"
+                className="flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] sm:flex-none sm:flex-row sm:gap-1.5 sm:py-1.5 sm:text-sm"
+              >
+                <Map className="h-5 w-5 sm:h-4 sm:w-4" /> {t('discovery.modeMap')}
+              </TabsTrigger>
+              <TabsTrigger
+                value="reels"
+                className="flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] sm:flex-none sm:flex-row sm:gap-1.5 sm:py-1.5 sm:text-sm"
+              >
+                <Video className="h-5 w-5 sm:h-4 sm:w-4" /> {t('discovery.modeReels')}
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="rating">
               <HotelRatingList hotels={hotels} />

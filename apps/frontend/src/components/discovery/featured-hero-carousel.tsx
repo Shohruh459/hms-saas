@@ -13,6 +13,20 @@ import { HotelBookButton } from './hotel-book-button';
 const AUTO_ADVANCE_MS = 6000;
 
 /**
+ * Video yuklanguncha (yoki video umuman bo'lmaganda) ko'rinadigan
+ * Skeleton UI / blur placeholder — foydalanuvchiga "bo'sh joy" o'rniga
+ * yumshoq animatsion fon ko'rsatadi.
+ */
+function MediaSkeleton() {
+  return (
+    <div
+      className="h-full w-full bg-gradient-to-br from-primary/40 via-slate-500/30 to-slate-900/60 bg-[length:200%_100%] animate-shimmer"
+      aria-hidden="true"
+    />
+  );
+}
+
+/**
  * Bosh sahifaning tepasidagi glassmorphism "Hero" karuseli — reyting
  * bo'yicha eng yaxshi 3 mehmonxonani (video fon, reyting/nishonlar,
  * "Hozir bron qilish" / "Videoni ko'rish" CTA'lari bilan) ajratib ko'rsatadi.
@@ -27,6 +41,7 @@ export function FeaturedHeroCarousel({
   const { t } = useTranslations();
   const top3 = hotels.slice(0, 3);
   const [index, setIndex] = useState(0);
+  const [loadedIds, setLoadedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (top3.length <= 1) return;
@@ -66,16 +81,27 @@ export function FeaturedHeroCarousel({
               className="absolute inset-0"
             >
               {hotel.videoUrl ? (
-                <video
-                  src={hotel.videoUrl}
-                  className="h-full w-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
+                <>
+                  {!loadedIds.has(hotel.id) && (
+                    <div className="absolute inset-0">
+                      <MediaSkeleton />
+                    </div>
+                  )}
+                  <video
+                    src={hotel.videoUrl}
+                    className={cn(
+                      'h-full w-full object-cover transition-opacity duration-500',
+                      loadedIds.has(hotel.id) ? 'opacity-100' : 'opacity-0',
+                    )}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    onLoadedData={() => setLoadedIds((prev) => new Set(prev).add(hotel.id))}
+                  />
+                </>
               ) : (
-                <div className="h-full w-full bg-gradient-to-br from-primary/70 to-slate-900" />
+                <MediaSkeleton />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
 
@@ -95,16 +121,19 @@ export function FeaturedHeroCarousel({
                     {hotel.region && <span>{hotel.region}</span>}
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    <HotelBookButton subdomain={hotel.subdomain} />
+                    <HotelBookButton
+                      subdomain={hotel.subdomain}
+                      className="px-3 text-xs sm:px-4 sm:text-sm"
+                    />
                     {hotel.videoUrl && (
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="gap-1.5 border-white/40 bg-white/10 text-white hover:bg-white/20"
+                        className="gap-1.5 border-white/40 bg-white/10 px-3 text-xs text-white hover:bg-white/20 sm:px-4 sm:text-sm"
                         onClick={() => onWatchVideo(hotel.id)}
                       >
-                        <PlayCircle className="h-4 w-4" /> {t('discovery.watchVideoCta')}
+                        <PlayCircle className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" /> {t('discovery.watchVideoCta')}
                       </Button>
                     )}
                   </div>

@@ -7,12 +7,16 @@
     "logout": "Выйти",
     "callService": "Вызвать горничную",
     "support": "Помощь/Жалоба",
-    "admin": "Админ панель"
+    "admin": "Админ панель",
+    "menu": "Меню"
   },
   "home": {
     "heroTitle": "Найдите подходящий номер",
     "heroSubtitle": "Удобные цены, доступность в реальном времени и быстрое бронирование",
     "searchButton": "Поиск",
+    "searchGuests": "Гостей",
+    "searchRoomType": "Тип номера",
+    "searchRoomTypeAny": "Любой тип",
     "noRooms": "Подходящих номеров не найдено",
     "contactTitle": "Контакты",
     "callNow": "Позвонить сейчас",

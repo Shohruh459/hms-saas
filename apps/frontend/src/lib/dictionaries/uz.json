@@ -7,12 +7,16 @@
     "logout": "Chiqish",
     "callService": "Xizmatchi chaqirish",
     "support": "Yordam/Shikoyat",
-    "admin": "Admin panel"
+    "admin": "Admin panel",
+    "menu": "Menyu"
   },
   "home": {
     "heroTitle": "O'zingizga munosib xonani toping",
     "heroSubtitle": "Qulay narxlar, real vaqtda mavjudlik va tezkor bron qilish",
     "searchButton": "Qidirish",
+    "searchGuests": "Mehmonlar soni",
+    "searchRoomType": "Xona turi",
+    "searchRoomTypeAny": "Barcha turlar",
     "noRooms": "Hozircha mos xona topilmadi",
     "contactTitle": "Bog'lanish",
     "callNow": "Hoziroq qo'ng'iroq qilish",

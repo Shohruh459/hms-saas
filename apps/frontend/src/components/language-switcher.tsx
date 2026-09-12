@@ -21,7 +21,7 @@ export function LanguageSwitcher() {
     <select
       value={locale}
       onChange={(event) => switchLocale(event.target.value)}
-      className="rounded-md border border-input bg-background px-2 py-1 text-sm"
+      className="rounded-md border border-input bg-background px-1.5 py-1 text-xs sm:px-2 sm:text-sm"
       aria-label="Til / Язык / Language"
     >
       {locales.map((code) => (

@@ -7,12 +7,16 @@
     "logout": "Log out",
     "callService": "Call housekeeping",
     "support": "Help/Complaint",
-    "admin": "Admin panel"
+    "admin": "Admin panel",
+    "menu": "Menu"
   },
   "home": {
     "heroTitle": "Find the room that suits you",
     "heroSubtitle": "Great prices, real-time availability and instant booking",
     "searchButton": "Search",
+    "searchGuests": "Guests",
+    "searchRoomType": "Room type",
+    "searchRoomTypeAny": "Any type",
     "noRooms": "No matching rooms found",
     "contactTitle": "Contact",
     "callNow": "Call now",
